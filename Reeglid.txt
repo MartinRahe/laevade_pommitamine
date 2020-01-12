@@ -1,0 +1,9 @@
+1. Mängitakse 10x10 ruudustikul, käigud toimuvad ruutude sees.
+2. Mängu alguses peab mängija lauale paigutama oma laevad. Laevu peab olema vähemalt üks ja laeva maksimaalne pikkus on 5 ruutu.
+3. Ükski kaks laeva ei tohi omada ühist ruutu, serva ega tippu.
+4. Kui mängija on oma laevad paigutanud, paigutab arvuti oma lauale samasugused laevad.
+5. Mängija ja arvuti ei näe üksteise laevu.
+6. Mängu ajal on mängija laual tema laevad ning seal kuvatakse arvuti laskude tulemused. Arvuti laual on mängijale nähtamatud arvuti laevad, seal teeb mängija oma laske.
+7. Pommitamine käib kordamööda, alustab mängija.
+8. Iga käigu järel saavad nii mängija kui arvuti selle kohta tagasisidet.
+9. Võidab see, kes hävitab enne kõik vastase laevad.

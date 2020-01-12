@@ -167,11 +167,11 @@ print(raskustase)
 
 
 def ules():
-    j.pendown()
     global lastpress
     if time() - lastpress < 0.6:
         return None
     lastpress = time()
+    j.pendown()
     #print(asukoht)
     if asukoht[1] < 9:
         asukoht[1] += 1
@@ -190,11 +190,11 @@ def ules():
 
 
 def alla():
-    j.pendown()
     global lastpress
     if time() - lastpress < 0.6:
         return None
     lastpress = time()
+    j.pendown()
     #print(asukoht)
     if asukoht[1] > 0:
         asukoht[1] -= 1
@@ -212,11 +212,11 @@ def alla():
     j.penup()
 
 def vasakule():
-    j.pendown()
     global lastpress
     if time() - lastpress < 0.6:
         return None
     lastpress = time()
+    j.pendown()
     #print(asukoht)
     if asukoht[0] > 0:
         asukoht[0] -= 1
@@ -234,11 +234,11 @@ def vasakule():
     j.penup()
 
 def paremale():
-    j.pendown()
     global lastpress
     if time() - lastpress < 0.6:
         return None
     lastpress = time()
+    j.pendown()
     #print(asukoht)
     if asukoht[0] < 9:
         asukoht[0] += 1
@@ -267,7 +267,7 @@ def paiguta():
         j.goto(-225 + 50 * x, -225 + 50 * y)
         j.pencolor("#0000FF")
         j.pendown()
-        j.dot(20)
+        j.dot(23)
         j.penup()
         for i in [[x+1,y+1],[x+1,y-1],[x-1,y+1],[x-1,y-1]]:
             if not (i[0] < 0 or i[1] < 0 or i[0] > 9 or i[1] > 9):
@@ -455,7 +455,7 @@ def eemalda():
         j.goto(-225 + 50 * x, -225 + 50 * y)
         j.pencolor("#FFFFFF")
         j.pendown()
-        j.dot(20)
+        j.dot(23)
         j.penup()
         for i in [[x+1,y+1],[x+1,y-1],[x-1,y+1],[x-1,y-1]]:
             if not (i[0] < 0 or i[1] < 0 or i[0] > 9 or i[1] > 9):
@@ -625,7 +625,7 @@ def valm2():
 
 laevavalik = Tk()
 laevavalik.title("Laevade paigutamine")
-canvas = Canvas(master = laevavalik, width = 600, height = 600)
+canvas = Canvas(master = laevavalik, width = 700, height = 700)
 canvas.pack()
 
 j = turtle.RawTurtle(canvas)
@@ -711,6 +711,226 @@ laevapikkused = [len(i) for i in laevad]
 print(laevapikkused)
 
 
+def ules():
+    if not kaik:
+        return None
+    global lastpress
+    if time() - lastpress < 0.6:
+        return None
+    lastpress = time()
+    j.pendown()
+    #print(asukoht)
+    if asukoht[1] < 9:
+        asukoht[1] += 1
+    else:
+        return None
+    j.pencolor("#000000")
+    for i in range(4):
+        j.forward(45)
+        j.right(90)
+    j.goto(102 + 50 * asukoht[0], -247 + 50 * asukoht[1])
+    j.pencolor("#00FF00")
+    for i in range(4):
+        j.forward(45)
+        j.right(90)
+    j.penup()
+
+
+def alla():
+    if not kaik:
+        return None
+    global lastpress
+    if time() - lastpress < 0.6:
+        return None
+    lastpress = time()
+    j.pendown()
+    #print(asukoht)
+    if asukoht[1] > 0:
+        asukoht[1] -= 1
+    else:
+        return None
+    j.pencolor("#000000")
+    for i in range(4):
+        j.forward(45)
+        j.right(90)
+    j.goto(102 + 50 * asukoht[0], -247 + 50 * asukoht[1])
+    j.pencolor("#00FF00")
+    for i in range(4):
+        j.forward(45)
+        j.right(90)
+    j.penup()
+
+def vasakule():
+    if not kaik:
+        return None
+    global lastpress
+    if time() - lastpress < 0.6:
+        return None
+    lastpress = time()
+    j.pendown()
+    #print(asukoht)
+    if asukoht[0] > 0:
+        asukoht[0] -= 1
+    else:
+        return None
+    j.pencolor("#000000")
+    for i in range(4):
+        j.forward(45)
+        j.right(90)
+    j.goto(102 + 50 * asukoht[0], -247 + 50 * asukoht[1])
+    j.pencolor("#00FF00")
+    for i in range(4):
+        j.forward(45)
+        j.right(90)
+    j.penup()
+
+def paremale():
+    if not kaik:
+        return None
+    global lastpress
+    if time() - lastpress < 0.6:
+        return None
+    lastpress = time()
+    j.pendown()
+    #print(asukoht)
+    if asukoht[0] < 9:
+        asukoht[0] += 1
+    else:
+        return None
+    j.pencolor("#000000")
+    for i in range(4):
+        j.forward(45)
+        j.right(90)
+    j.goto(102 + 50 * asukoht[0], -247 + 50 * asukoht[1])
+    j.pencolor("#00FF00")
+    for i in range(4):
+        j.forward(45)
+        j.right(90)
+    j.penup()
+
+def mark():
+    if not kaik:
+        return None
+    global lastpress
+    lastpress += 0.1
+    j.pencolor("#FF0000")
+    j.goto(125 + 50 * asukoht[0], -225 + 50 * asukoht[1])
+    j.pendown()
+    j.left(45)
+    j.forward(10)
+    j.back(20)
+    j.forward(10)
+    j.right(90)
+    j.forward(10)
+    j.back(20)
+    j.forward(10)
+    j.left(45)
+    j.penup()
+    j.goto(102 + 50 * asukoht[0], -247 + 50 * asukoht[1])
+
+def unmark():
+    if not kaik:
+        return None
+    global lastpress
+    lastpress += 0.1
+    j.pencolor("#FFFFFF")
+    j.goto(125 + 50 * asukoht[0], -225 + 50 * asukoht[1])
+    j.pendown()
+    j.left(45)
+    j.forward(10)
+    j.back(20)
+    j.forward(10)
+    j.right(90)
+    j.forward(10)
+    j.back(20)
+    j.forward(10)
+    j.left(45)
+    j.penup()
+    j.goto(102 + 50 * asukoht[0], -247 + 50 * asukoht[1])
+
+def pomm():
+    if not kaik:
+        return None
+    pass
+
+
+laud = Tk()
+laud.title("Laevade paigutamine")
+canvas = Canvas(master = laud, width = 1400, height = 700)
+canvas.pack()
+
+j = turtle.RawTurtle(canvas)
+j.speed(0)
+j.hideturtle()
+j.pensize(10)
+j.penup()
+for i in range(11):
+    j.goto(-600, -250 + 50 * i)
+    j.pendown()
+    j.forward(500)
+    j.penup()
+j.left(90)
+for i in range(11):
+    j.goto(-600 + 50 * i,-250)
+    j.pendown()
+    j.forward(500)
+    j.penup()
+j.right(90)
+j.goto(-350,270)
+j.write("SINU LAUD",True,"center",("Arial",40,"bold"))
+for i in range(11):
+    j.goto(100, -250 + 50 * i)
+    j.pendown()
+    j.forward(500)
+    j.penup()
+j.left(90)
+for i in range(11):
+    j.goto(100 + 50 * i,-250)
+    j.pendown()
+    j.forward(500)
+    j.penup()
+j.goto(350,270)
+j.write("ARVUTI LAUD",False,"center",("Arial",40,"bold"))
+
+j.pencolor("#0000FF")
+j.pensize(23)
+for i in laevad:
+    j.goto(-575 + 50 * i[0][0], -225 + 50 * i[0][1])
+    j.pendown()
+    for e in range(len(i)):
+        j.goto(-575 + 50 * i[e][0], -225 + 50 * i[e][1])
+    j.penup()
+
+j.pensize(5)
+j.goto(102,-247)
+asukoht = [0,0]
+j.pencolor("#00FF00")
+j.pendown()
+for i in range(4):
+    j.forward(45)
+    j.right(90)
+j.penup()
+
+control = Toplevel(laud)
+control.title("Pommitaja kontrollimine")
+control.geometry('300x210')
+nupp1 = ttk.Button(control, text="N", command=ules)
+nupp1.place(x=75, y=20, width=150)
+nupp2 = ttk.Button(control, text="W", command=vasakule)
+nupp2.place(x=75, y=45, width=75)
+nupp3 = ttk.Button(control, text="E", command=paremale)
+nupp3.place(x=150, y=45, width=75)
+nupp4 = ttk.Button(control, text="S", command=alla)
+nupp4.place(x=75, y=70, width=150)
+nupp5 = ttk.Button(control, text="Märgista", command=mark)
+nupp5.place(x=75, y=120, width=150)
+nupp6 = ttk.Button(control, text="Eemalda märgistus", command=unmark)
+nupp6.place(x=75, y=145, width=150)
+nupp7 = ttk.Button(control, text="Allahu akbar!", command=pomm)
+nupp7.place(x=75, y=170, width=150)
+
+kaik = True
+laud.mainloop()
 
 print()
 print(encode("Hello World"))
