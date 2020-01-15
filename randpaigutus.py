@@ -2,7 +2,14 @@ from random import randint, choice
 from copy import deepcopy
 from time import time
 import os
+import base64
 
+def encode(string):
+    return str(base64.b64encode(bytes(string, "utf-8")), "utf-8")
+
+
+def decode(string):
+    return str(base64.b64decode(bytes(string, "utf-8")), "utf-8")
 
 
 dir1 = "./boarddata"
@@ -130,7 +137,7 @@ def paiguta(n):
     #print(saab)
 
 #laevapikkused = [1,5,3,5,5,5,5,5,5]
-laevapikkused = [1 for i in range(25)]
+laevapikkused = [5 for i in range(7)]
 laevapikkused.sort()
 print(laevapikkused)
 f = dir1 + "/laud"
@@ -138,6 +145,8 @@ for i in laevapikkused:
     f += "-" + str(i)
 f += ".txt"
 print(f)
+lauafail = open(f,"a")
+lauafail.close()
 lauafail = open(f,"r")
 arvutilauad = lauafail.read().split("\n"*2)
 for i in range(len(arvutilauad)):
@@ -174,6 +183,8 @@ for i in arvutil1:
 
 if kaua:
     arvutilh = choice(arvutilauad)
+    for i in range(10):
+        arvutilh[i] = decode(arvutilh[i])
     print(arvutilh)
     arvutilh11 = [[j for j in i] for i in arvutilh]
     print(arvutilh11)
@@ -220,12 +231,23 @@ else:
     arvutilv21 = arvutilv11[::-1]
     arvutilh22 = arvutilh12[::-1]
     arvutilv22 = arvutilv12[::-1]
+    for i in range(10):
+        arvutilh11[i] = encode(arvutilh11[i])
+        arvutilh12[i] = encode(arvutilh12[i])
+        arvutilh21[i] = encode(arvutilh21[i])
+        arvutilh22[i] = encode(arvutilh22[i])
+        arvutilv11[i] = encode(arvutilv11[i])
+        arvutilv12[i] = encode(arvutilv12[i])
+        arvutilv21[i] = encode(arvutilv21[i])
+        arvutilv22[i] = encode(arvutilv22[i])
+    print(arvutilh11,"e")
     if arvutilh11 not in arvutilauad and arvutilh21 not in arvutilauad and arvutilv11 not in arvutilauad and arvutilv21 not in arvutilauad and \
             arvutilh12 not in arvutilauad and arvutilh22 not in arvutilauad and arvutilv12 not in arvutilauad and arvutilv22 not in arvutilauad:
         for i in range(10):
             lauafail.write(arvutilh11[i]+"\n")
         lauafail.write("\n")
 print()
+lauafail.close()
 for i in arvutil:
     for j in range(10):
         i[j] = int(i[j])
@@ -260,3 +282,4 @@ for y in range(10):
 laevapikkused1 = [len(i) for i in laevad]
 print(laevapikkused1,len(laevapikkused1))
 print(time()-algaeg)
+
