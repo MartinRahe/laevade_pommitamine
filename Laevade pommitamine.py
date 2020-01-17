@@ -755,9 +755,64 @@ for y in range(10):
 print(laevad)
 laevapikkused = [len(i) for i in laevad]
 print(laevapikkused)
+laevapikkused.sort()
+print(laevapikkused)
+f = dir1 + "/laud"
+for i in laevapikkused:
+    f += "-" + str(i)
+f += ".txt"
+print(f)
+lauafail = open(f,"a")
+lauafail.close()
+lauafail = open(f,"r")
+arvutilauad = lauafail.read().split("\n"*2)
+for i in range(len(arvutilauad)):
+    arvutilauad[i] = arvutilauad[i].split("\n")
+del arvutilauad[-1]
+print("a",arvutilauad)
+lauafail.close()
+lauafail = open(f,"a")
+
+#Loeb mängija laua sisse, et paigutamisel kasutada
+arvutilh11 = []
+arvutilv11 = []
+arvutilh12 = []
+arvutilv12 = []
+
+mangijal1 = Laud()
+for i in range(10):
+    for j in range(10):
+        mangijal1.laud[i][j] = str(mangijal.laud[i][j])
+
+for i in range(10):
+    arvutilh11.append("".join(mangijal1.laud[i]))
+    arvutilv11.append("".join([j[i] for j in mangijal1.laud]))
+    arvutilh12.append("".join(mangijal1.laud[i])[::-1])
+    arvutilv12.append("".join([j[i] for j in mangijal1.laud])[::-1])
+arvutilh21 = arvutilh11[::-1]
+arvutilv21 = arvutilv11[::-1]
+arvutilh22 = arvutilh12[::-1]
+arvutilv22 = arvutilv12[::-1]
+for i in range(10):
+    arvutilh11[i] = encode(arvutilh11[i])
+    arvutilh12[i] = encode(arvutilh12[i])
+    arvutilh21[i] = encode(arvutilh21[i])
+    arvutilh22[i] = encode(arvutilh22[i])
+    arvutilv11[i] = encode(arvutilv11[i])
+    arvutilv12[i] = encode(arvutilv12[i])
+    arvutilv21[i] = encode(arvutilv21[i])
+    arvutilv22[i] = encode(arvutilv22[i])
+print(arvutilh11,"e")
+if arvutilh11 not in arvutilauad and arvutilh21 not in arvutilauad and arvutilv11 not in arvutilauad and arvutilv21 not in arvutilauad and \
+        arvutilh12 not in arvutilauad and arvutilh22 not in arvutilauad and arvutilv12 not in arvutilauad and arvutilv22 not in arvutilauad:
+    for i in range(10):
+        lauafail.write(arvutilh11[i]+"\n")
+    lauafail.write("\n")
+
+lauafail.close()
 
 #Algab randpaigutus
-"""
+
 def paiguta(n):
     global valmis
     global arvutil
@@ -877,16 +932,8 @@ def paiguta(n):
     #print(saab)
 
 #laevapikkused = [1,5,3,5,5,5,5,5,5]
-laevapikkused = [5 for i in range(7)]
-laevapikkused.sort()
-print(laevapikkused)
-f = dir1 + "/laud"
-for i in laevapikkused:
-    f += "-" + str(i)
-f += ".txt"
-print(f)
-lauafail = open(f,"a")
-lauafail.close()
+#laevapikkused = [5 for i in range(7)]
+
 lauafail = open(f,"r")
 arvutilauad = lauafail.read().split("\n"*2)
 for i in range(len(arvutilauad)):
@@ -899,12 +946,12 @@ lauafail = open(f,"a")
 eelmised = {i:[] for i in range(len(laevapikkused))}
 print(eelmised)
 
+#Seda ei tee Laud() objektiks!
 arvutil = [[0 for i in range(10)] for j in range(10)]
 
 algaeg = time()
 
 paiguta(0)
-
 
 for i in arvutil:
     print(i)
@@ -914,6 +961,7 @@ for i in arvutil:
         if i[j] == "x":
             i[j] = 0
 
+#Seda ka ei tee!
 arvutil1 = deepcopy(arvutil)
 for i in arvutil1:
     for j in range(10):
@@ -995,7 +1043,7 @@ for i in arvutil:
     print(i)
 print()
 kaidud = []
-laevad = []
+laevad1 = []
 for y in range(10):
     for x in range(10):
         if arvutil[y][x] == 1 and [x, y] not in kaidud:
@@ -1017,13 +1065,24 @@ for y in range(10):
                     a += 1
                 else:
                     break
-            laevad.append(laev)
-#print(laevad)
+            laevad1.append(laev)
+print(laevad1)
 laevapikkused1 = [len(i) for i in laevad]
 print(laevapikkused1,len(laevapikkused1))
-print(time()-algaeg)
-"""
+print(time()-algaeg, "aeg")
+
 #Lõppeb randpaigutus
+
+print(arvutil)
+print(arvutil1)
+
+arvutil = Laud()
+for i in range(10):
+    for j in range(10):
+        arvutil.laud[i][j] = int(arvutil1[i][j])
+print()
+pp.pprint(arvutil.laud)
+print()
 
 def ules():
     if not kaik:
