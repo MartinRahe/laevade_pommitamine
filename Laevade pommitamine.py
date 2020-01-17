@@ -1231,7 +1231,6 @@ def pomm():
         return None
     pass
 
-
 laud = Tk()
 laud.title("Laevade paigutamine")
 canvas = Canvas(master=laud, width=1400, height=700)
@@ -1307,6 +1306,12 @@ nupp6.place(x=75, y=145, width=150)
 nupp7 = ttk.Button(control, text="Allahu akbar!", command=pomm)
 nupp7.place(x=75, y=170, width=150)
 
+ajalugu = Toplevel(laud)
+ajalugu.title("Tulistamised")
+aja = tkst.ScrolledText(master=ajalugu, wrap=WORD, width=50, height=20)
+aja.pack(padx=10, pady=10, fill=BOTH, expand=True)
+aja.insert(INSERT, "AAAAAAAAAAAAAAAAAA")
+
 kaik = True
 laud.mainloop()
 
@@ -1317,3 +1322,4 @@ print(a)
 b = base64.b64decode(a)
 print(b)
 print(str(b, "utf-8"))
+print(decode("cGFyb29s"))
