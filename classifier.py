@@ -34,16 +34,7 @@ class NaiveBayesGuesser:
                 training_grid.append(eval(row[2]))
             except:
                 pass
-        #flat_list = []
-        #for sublist in training_data:
-        #    for item in sublist:
-        #        flat_list.append(item)
-        #training_data = flat_list
-        #training_data = training_data[1:]
-        #training_data = []
-
         self.features = self.train(training_grid, training_data, i)
-        #print(self.features)
 
     def get_surroundings(self, point):
         x = int(point[0])
@@ -100,8 +91,6 @@ class NaiveBayesGuesser:
             clean_neighbours = self.remove_oob(neighbours)
             current_prob = 0
             for index, feature in enumerate(self.features):
-                #if neighbours[index] not in clean_neighbours:
-                #    neighbour_value = "OOB"
                 try:
                     neighbour_value = str(grid[neighbours[index][1]][neighbours[index][0]])
                 except:
@@ -114,7 +103,6 @@ class NaiveBayesGuesser:
                 count_all = self.features[feature].sum("no_ship") + count_of_yes
 
                 prob = np.log((count_of_neighbour_value / count_of_yes) * (count_of_yes / count_all) / (count_of_all_neighbour_value / count_all))
-                #print(prob)
                 current_prob += prob
             if current_prob > max_prob and pos not in self.guessed:
                 max_guess = pos
@@ -138,14 +126,3 @@ class NaiveBayesGuesser:
             return str(grid[pos[1]][pos[0]])
         except:
             return "OOB"
-
-
-base = [["0" for i in range(10)] for j in range(10)]
-nbg = NaiveBayesGuesser(base)
-print(nbg.get_guess(base))
-print(nbg.get_guess(base))
-print(nbg.get_guess(base))
-print(nbg.get_guess(base))
-print(nbg.get_guess(base))
-print(nbg.get_guess(base))
-
