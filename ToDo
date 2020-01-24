@@ -1,5 +1,19 @@
 #17.01.20
-  1. Heatmap (KKK)
-    1.1. Heatmapi järgi laevade paigutamine
-    1.2. Heatmapi järgi tulistamine
-  2. Algelised tulistamisalgoritmid (Normal)
+  1. Väga lihtne
+    1.1. Suvaline paigutus
+    1.2. Suvaline ründamine
+  2. Lihtne
+    1.1. Suvaline paigutus
+    1.2. Otsib kogu laeva üles, kui on ühe tüki leidnud
+  3. Keskmine
+    3.1. Heatmapi järgi laevade paigutamine
+    3.2. Diagonaalide järgi orienteerudes tulistamine
+  4. Raske
+    4.1. Heatmapi järgi laevade paigutamine
+    4.2. Heatmapi järgi tulistamine
+  5. Ekstreemne
+    5.1. 
+    5.2. NaiveBayesGuesser
+  6. Võimatu
+    6.1. 
+    6.2. Teab kõikide mängija laevade asukohti
