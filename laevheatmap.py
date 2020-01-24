@@ -1,5 +1,6 @@
 import pprint
 from random import randint
+from math import floor
 
 # global muutujad
 difficulty = 'normal' #Default difficulty
@@ -47,6 +48,8 @@ mangijap = Laud(10,10) #Siin hoitakse mängija pommitamise informatsiooni
 heatmapl = Laud(10, 10)
 heatmapt = Laud(10, 10)
 
+heatmapl.laud[8][4] = 1
+'''
 def hardal():
     global tulnim
     hml = heatmapl.laud
@@ -60,7 +63,20 @@ def hardal():
         arvutip.laud[tulnim[0][0]][tulnim[0][1]] = 'x'
     else:
         arvutip.laud[tulnim[0][0]][tulnim[0][1]] = 'O'
-    tulnim.pop(0)
+    tulnim.pop(0)'''
+
+def hardal():
+    global tulnim
+    hml = [] #koopia heatmapist, mida võib editida
+    for i in range(10):
+        hml += heatmapl.laud[i]
+    print(hml)
+    for i in range(len(hml)):
+        tulnim.append([floor(hml.index(max(hml))/10), (hml.index(max(hml)))%10])
+        hml[hml.index(max(hml))] = -420
+    print(tulnim)
+    print(hml)
+    '''if tulnim = []:
+        for i in range(len(hml)):
+            hml.index(max(hml))'''
 hardal()
-
-
