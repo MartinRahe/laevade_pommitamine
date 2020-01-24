@@ -14,7 +14,6 @@ from copy import deepcopy
 
 # 1. -----------------------------------------------
 # Veidrad funktsioonid ja vajalikud muutujad + classid
-
 dir = "./playerdata"
 try:
     os.listdir(dir)
@@ -42,7 +41,6 @@ class Laud:
         # list, mis hoiab kaidud kohtade koordinaate
         self.kaidud = []
         self.laevapikkused = []
-        
         self.laud = [[0 for i in range(self.pikkus)] for s in range(self.laius)] 
         
 # PrettyPrinteri deklaleerimine
@@ -167,30 +165,24 @@ def rt(raskus):
     global raskustase
     sobib = True
     raskustase = raskus
-    
-    if (raskustase == 1):
-        easy()
-    elif (raskustase == 2):
-        normal()
-    elif (raskustase == 3):
-        hard()
-    elif (raskustase == 4):
-        extreme()
-    elif (raskustase == 5):
-        impossible()
-        
     # sulgeb raskustaseme valimisakna
     rask.destroy()
 
 # 2. ------------------------------
 # Siin asuvad kõik erinevate raskustasemete jaoks kasutatavad algoritmid
 
+#
+#
+# Väga Lihtne
+def veryeasy():
+    return None
 
 # 
 # Suvaline laevade paigutus läbi tõenäosuste kasutades randinti
-# Easy:
+# Lihtne:
 def easy(): 
     
+    # n näitab paigutatud laevade summat
     def paiguta(n):
         global valmis
         global kaua
@@ -309,22 +301,26 @@ def easy():
         #print(saab)
 
     #laevapikkused = [1,5,3,5,5,5,5,5,5]
+            
+    # vaja teha muutujaks laevade arvu kohta
     laevapikkused = [5 for i in range(7)]
     laevapikkused.sort()
-    print(laevapikkused)
+    print("laevapikkused:", laevapikkused)
+    
     f = dir1 + "/laud"
     for i in laevapikkused:
         f += "-" + str(i)
     f += ".txt"
-    print(f)
+    print("mingi fail?: ", f)
+    
     lauafail = open(f,"a")
     lauafail.close()
     lauafail = open(f,"r")
-    arvutil.laudauad = lauafail.read().split("\n"*2)
-    for i in range(len(arvutil.laudauad)):
-        arvutil.laudauad[i] = arvutil.laudauad[i].split("\n")
-    del arvutil.laudauad[-1]
-    print("a",arvutil.laudauad)
+    arvutilauad = lauafail.read().split("\n"*2)
+    for i in range(len(arvutilauad)):
+        arvutilauad[i] = arvutilauad[i].split("\n")
+    del arvutilauad[-1]
+    print("a",arvutilauad)
     lauafail.close()
     lauafail = open(f,"a")
 
@@ -354,7 +350,7 @@ def easy():
         print(i)
 
     if kaua:
-        arvutil.laudh = choice(arvutil.laudauad)
+        arvutil.laudh = choice(arvutilauad)
         for i in range(10):
             arvutil.laudh[i] = decode(arvutil.laudh[i])
         print(arvutil.laudh)
@@ -413,8 +409,8 @@ def easy():
             arvutil.laudv21[i] = encode(arvutil.laudv21[i])
             arvutil.laudv22[i] = encode(arvutil.laudv22[i])
         print(arvutil.laudh11,"e")
-        if arvutil.laudh11 not in arvutil.laudauad and arvutil.laudh21 not in arvutil.laudauad and arvutil.laudv11 not in arvutil.laudauad and arvutil.laudv21 not in arvutil.laudauad and \
-                arvutil.laudh12 not in arvutil.laudauad and arvutil.laudh22 not in arvutil.laudauad and arvutil.laudv12 not in arvutil.laudauad and arvutil.laudv22 not in arvutil.laudauad:
+        if arvutil.laudh11 not in arvutilauad and arvutil.laudh21 not in arvutilauad and arvutil.laudv11 not in arvutilauad and arvutil.laudv21 not in arvutilauad and \
+                arvutil.laudh12 not in arvutilauad and arvutil.laudh22 not in arvutilauad and arvutil.laudv12 not in arvutilauad and arvutil.laudv22 not in arvutilauad:
             for i in range(10):
                 lauafail.write(arvutil.laudh11[i]+"\n")
             lauafail.write("\n")
@@ -468,13 +464,20 @@ def easy():
     '''
   
 # Normal:
-
+def normal():
+    return None
+#
+# 
 # Hard:
-
+def hard():
+    return None
+    
 #
 #
 # NaiveBayesGuesser algoritm
 # Extreme:
+def extreme():
+    return None
 
 #
 #
@@ -1231,7 +1234,7 @@ def game_loop():
     rask.mainloop()
     if not sobib:
         sys.exit()
-    print(raskustase)
+    #print(raskustase)
     
     # laevavaliku aken
     laevavalik = Tk()
@@ -1338,6 +1341,21 @@ def game_loop():
     print(valiklaud.laevapikkused)
     
     # lõplik mängulaud
+    
+    # valib raskustaseme vastavalt mängija algsele soovile
+    if (raskustase == 1):
+        veryeasy()
+    elif (raskustase == 2):
+        easy()
+    elif (raskustase == 3):
+        normal()
+    elif (raskustase == 4):
+        hard()
+    elif (raskustase == 5):
+        extreme()
+    elif (raskustase == 6):
+        impossible()
+        
     laud = Tk()
     laud.title("laevade paigutamine")
     canvas = Canvas(master=laud, width=1400, height=700)
