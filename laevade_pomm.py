@@ -61,7 +61,7 @@ pp.pprint(valiklaud.laud)
 arvutil = Laud()
 
 # neljas laud (p nagu pomm)
-# arvuti pommitamise informatsiooni
+# arvuti pommitamise informatsiooni (arvuti ründab mängijat)
 arvutip = Laud()
 
 # viies laud (p nagu pomm)
@@ -179,6 +179,9 @@ def rt(raskus):
 # Väga Lihtne
 def veryeasy():
     return None
+    # arvutip ja arvutil
+    # arvutip - kuidas arvuti pommitab mängijat
+    # arvutil - kuidas arvuti paigutab enda laevad
 
 # 
 # Suvaline laevade paigutus läbi tõenäosuste kasutades randinti
@@ -305,10 +308,8 @@ def easy():
         #print(saab)
 
     #laevapikkused = [1,5,3,5,5,5,5,5,5]
-            
     # vaja teha muutujaks laevade arvu kohta
-    mangijal
-    laevapikkused = [5 for i in range(7)]
+    laevapikkused = valiklaud.laevapikkused
     laevapikkused.sort()
     print("laevapikkused:", laevapikkused)
     
@@ -1158,9 +1159,35 @@ def atk_pomm():
     global asukoht
     global kaik
     global j
+    
+    # hetkel ei tööta, aga mõeldud selleks, et mängija nupud ei töötaks,
+    # kui ei ole mängija käik
     if not kaik:
         return None
-    pass
+
+    # kui on laev
+    j.goto(125 + 50 * asukoht[0], -225 + 50 * asukoht[1])
+    j.pencolor("#0000FF")
+    j.pendown()
+    j.dot(23)
+    j.pencolor("#FF0000")
+    j.left(45)
+    j.forward(20)
+    j.back(40)
+    j.forward(20)
+    j.right(90)
+    j.forward(20)
+    j.back(40)
+    j.forward(20)
+    j.left(45)
+    j.penup()
+    j.goto(102 + 50 * asukoht[0], -247 + 50 * asukoht[1])
+    
+    # kui ei ole laeva
+    
+
+    pp.pprint(arvutil.laud)
+    pp.pprint(mangijap.laud)
 
     print("rünnak asukoht:", asukoht)
 # 4. ----------------------------------
