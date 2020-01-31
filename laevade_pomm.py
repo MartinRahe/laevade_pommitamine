@@ -11,6 +11,7 @@ from time import time
 import pprint
 from random import randint, choice
 from copy import deepcopy
+from classifier import NaiveBayesGuesser
 
 # 1. -----------------------------------------------
 # Veidrad funktsioonid ja vajalikud muutujad + classid
@@ -41,7 +42,9 @@ class Laud:
         # list, mis hoiab kaidud kohtade koordinaate
         self.kaidud = []
         self.laevapikkused = []
-        self.laud = [[0 for i in range(self.pikkus)] for s in range(self.laius)] 
+        self.laud = [[0 for i in range(self.pikkus)] for s in range(self.laius)]
+
+
         
 # PrettyPrinteri deklaleerimine
 pp = pprint.PrettyPrinter(indent=4)
@@ -53,7 +56,7 @@ valiklaud = Laud()
 pp.pprint(valiklaud.laud)
 
 # kolmas laud (l nagu laev)
-# arvuti laevade infformatsiooni
+# arvuti laevade informatsiooni
 # ehk arvuti laud "talle kuvatuna"
 arvutil = Laud()
 
@@ -63,7 +66,7 @@ arvutip = Laud()
 
 # viies laud (p nagu pomm)
 # mängija pommitamise informatsioon ehk
-# arvuti laud mägijale kuvatuna
+# arvuti laud mängijale kuvatuna
 mangijap = Laud()
 
 def encode(string):
@@ -198,6 +201,7 @@ def easy():
             voim = [[a,b,c] for a in range(0,11-pikkus) for b in range(0,10) for c in range(0,2)]
         #print(voim)
         eelmised[n] = deepcopy(arvutil.laud)
+        print(eelmised)
         valmis = False
         while voim:
             arvutil.laud = deepcopy(eelmised[n])
@@ -303,6 +307,7 @@ def easy():
     #laevapikkused = [1,5,3,5,5,5,5,5,5]
             
     # vaja teha muutujaks laevade arvu kohta
+    mangijal
     laevapikkused = [5 for i in range(7)]
     laevapikkused.sort()
     print("laevapikkused:", laevapikkused)
@@ -477,7 +482,12 @@ def hard():
 # NaiveBayesGuesser algoritm
 # Extreme:
 def extreme():
-    return None
+    global arvutip
+    nb = NaiveBayesGuesser(arvutip)
+    n = 0
+    while n != 4:
+        print("guess:", nb.get_guess(arvutip.laud))
+        n += 1
 
 #
 #
@@ -1355,9 +1365,9 @@ def game_loop():
         extreme()
     elif (raskustase == 6):
         impossible()
-        
+
     laud = Tk()
-    laud.title("laevade paigutamine")
+    laud.title("laevade ründamine")
     canvas = Canvas(master=laud, width=1400, height=700)
     canvas.pack()
 
