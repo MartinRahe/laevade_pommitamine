@@ -171,6 +171,41 @@ def rt(raskus):
     # sulgeb raskustaseme valimisakna
     rask.destroy()
 
+# tagastab True, kui tabatud laev on põhjas
+def pihtas_pohjas(maatriks, alg_pos, tabamus):
+
+    moves = [[0, 1], [1, 0], [-1, 0], [0, -1]]
+    
+    for move in moves:
+        
+        # kontrollitmaks visuaalselt, mida programm kontrollib
+        if (9-(alg_pos[1]+move[1]) >= 0 and 9-(alg_pos[0]+move[0]) >= 0) and (9-(alg_pos[1]+move[1]) <= 9 and 9-(alg_pos[0]+move[0]) <= 9):
+            j.penup()
+            j.goto(-575 + (50 * (alg_pos[1]+move[1])), -225 + (50 *  (alg_pos[0]+move[0])))
+            j.pendown()
+            j.pencolor("#d3f3c8")
+            j.dot(25)
+
+            if maatriks[9-(alg_pos[0]+move[0])][alg_pos[1]+move[1]] == tabamus:
+                return False
+    
+    return True
+    
+# uurib, kas 'item' on nested listis
+def find(mylist, item):
+    for sub_list in mylist:
+        if item in sub_list:
+            return True
+    return False
+
+# leiab mingi 'item'i indeksi nested listis
+def find_index(mylist, item):
+    for sub_list in mylist:
+        if item in sub_list:
+            return (mylist.index(sub_list), sub_list.index(item))
+    return None
+
+
 # 2. ------------------------------
 # Siin asuvad kõik erinevate raskustasemete jaoks kasutatavad algoritmid
 
@@ -183,13 +218,8 @@ def veryeasy():
 
 def atk_veryeasy():
     global valiklaud
-    # xpos
-    # ypos
     # kas on -> joonista rist
     # kui ei ole -> joonista hall ring
-    # arvutip ja arvutil
-    # arvutip - kuidas arvuti pommitab mängijat
-    # arvutil - kuidas arvuti paigutab enda laevad
     posx = randint(0, 9)
     posy = randint(0, 9)
     
@@ -511,6 +541,190 @@ def easy():
     '''
 
 def atk_easy():
+    global kontroll
+    # muidu proovi leida üles kogu laev
+    # ei tulista samasse kohta
+    # märgistab võimatud ruudud
+    
+    # arvutip - arvuti ründab mängijat
+    # valiklaud - mängija laevade info
+    
+    # 0 - teadmata
+    # 1 - tabamus
+    # 2 - märgendus
+    # 3 - põhjas
+    # 4 - mööda
+    # 5 - uuritud tabamus
+    
+    # kui laual on mõni tabamus
+    # tabamused tuleb märkida "loetuteks", et arvuti ei jookseks kokku
+    if (find(arvutip.laud, 1)):
+        
+        tabamus_pos = find_index(arvutip.laud, 1)
+        uuritud = 0
+        moves = [[0, 1], [1, 0], [-1, 0], [0, -1]]
+        
+        for move in moves:
+            if (9-(tabamus_pos[1]+move[1]) >= 0 and 9-(tabamus_pos[0]+move[0]) >= 0) and (9-(tabamus_pos[1]+move[1]) <= 9 and 9-(tabamus_pos[0]+move[0]) <= 9):
+                
+                # kõik mida arvuti kontrollib
+                j.penup()
+                j.goto(-575 + (50 * (9-(tabamus_pos[0]+move[0]))), -225 + (50 * (tabamus_pos[1]+move[1])))
+                j.pencolor("#2f6276") #sinakas
+                j.pendown()
+                j.dot(30)
+                j.penup()
+                
+                if arvutip.laud[9-(tabamus_pos[1]+move[1])][tabamus_pos[0]+move[0]] == 0:
+                    # kohad kuhu arvuti tulistab
+                    j.penup()
+                    j.goto(-575 + (50 * (9-(tabamus_pos[0]+move[0]))), -225 + (50 * (tabamus_pos[1]+move[1])))
+                    j.pencolor("#ff8847") #oranž
+                    j.pendown()
+                    j.dot(30)
+                    j.penup()
+                    
+                    # kui laseb pihta
+                    if (kontroll[9-(tabamus_pos[1]+move[1])][tabamus_pos[0]+move[0]] == 1):
+                        print("pihtas")
+                        # hetkel pihtas, võib ka olla põhjas
+                        # tulebka joonistada
+                        arvutip.laud[9-(tabamus_pos[1]+move[1])][tabamus_pos[0]+move[0]] = 1
+                        
+                        j.penup()
+                        j.goto(-575 + (50 * (9-(tabamus_pos[0]+move[0]))), -225 + (50 * (tabamus_pos[1]+move[1])))
+                        j.pendown()
+                        j.pencolor("#FF0000")
+                        j.left(45)
+                        j.forward(20)
+                        j.back(40)
+                        j.forward(20)
+                        j.right(90)
+                        j.forward(20)
+                        j.back(40)
+                        j.forward(20)
+                        j.left(45)
+                        break
+                        
+                    else:
+                        # lasi mööda, ehk 4
+                        arvutip.laud[9-(tabamus_pos[1]+move[1])][tabamus_pos[0]+move[0]] = 4
+                        break
+
+        # kas on uuritud lõpuni
+        # jah, kui on leidnud ühe teise jupi
+        # muidu ei
+                    
+        # eraldi märgistus, kui pihtas ja kui pp
+        # eraldi märgistus kohtadele, kus ei saa olla laeva
+        
+        # peab muutma mangijap lauda, et arvutit "õpetada"
+        return None
+    
+    # kui laud on tühi või kõik laevad on põhjas siis tulista suvaliselt
+    else:
+         
+        # kontrollib, et ei tulista võimatutesse kohtadesse.
+        lask = False
+        while not lask:
+            
+            posx = randint(0, 9)
+            posy = randint(0, 9)
+            
+            if arvutip.laud[9-posy][posx] == 0:
+            
+                lask = True
+                
+                if valiklaud.laud[posy][posx] == 1:
+                    # kui on laev ehk tabamus
+                    j.penup()
+                    j.goto(-575 + (50 * posx), -225 + (50 *  posy))
+                    j.pendown()
+                    j.pencolor("#FF0000")
+                    j.left(45)
+                    j.forward(20)
+                    j.back(40)
+                    j.forward(20)
+                    j.right(90)
+                    j.forward(20)
+                    j.back(40)
+                    j.forward(20)
+                    j.left(45)
+                    
+                    # kui pihta, siis tuleb teha ka märgistused
+                    if pihtas_pohjas(kontroll, [posy, posx], 1):
+                        # põhjas, vajalik arvutile
+                        arvutip.laud[9-posy][posx] = 3
+                        # põhjas, vajalik kontrolliks
+                        kontroll[9-posy][posx] = 3
+                        print("põhjas")
+                        
+                        # kui põhjas, siis märgendused ka üles, alla, paremale ja vasakule
+                        moves = [[0, 1], [1, 0], [-1, 0], [0, -1]]
+    
+                        for move in moves:
+                            
+                            # kontrollitmaks visuaalselt, mida programm kontrollib
+                            if (9-(posx+move[1]) >= 0 and 9-(posy+move[0]) >= 0) and (9-(posx+move[1]) <= 9 and 9-(posy+move[0]) <= 9):
+                                j.penup()
+                                j.goto(-575 + (50 * (posx+move[1])), -225 + (50 *  (posy+move[0])))
+                                j.pencolor("#A9A9A9")
+                                j.pendown()
+                                j.left(45)
+                                j.forward(10)
+                                j.back(20)
+                                j.forward(10)
+                                j.right(90)
+                                j.forward(10)
+                                j.back(20)
+                                j.forward(10)
+                                j.left(45)
+                                
+                                arvutip.laud[9-(posy+move[0])][posx+move[1]] = 2
+                        
+                    else:
+                        # lasi pihta, vajalik arvutile ründamiseks
+                        arvutip.laud[9-posy][posx] = 1
+                        # laev, mis sai pihta, vajalik pihtas_pohjas kontrolliks
+                        kontroll[9-posy][posx] = 2
+                        print("pihtas")
+                    
+                    # märgistused, kui laseb pihta
+                    pos = [[1, 1], [-1, -1], [-1, 1], [1, -1]]
+                    
+                    for item in pos:
+                        if 9-(posx+item[0]) >= 0 and 9-(posy+item[1]) >= 0 and 9-(posx+item[0]) <= 9 and 9-(posy+item[1]) <= 9:
+                            arvutip.laud[9-(posy+item[1])][posx+item[0]] = 2
+                            j.penup()
+                            j.goto(-575 + (50 * (posx+item[0])), -225 + (50 *  (posy+item[1])))
+                            j.pencolor("#A9A9A9")
+                            j.pendown()
+                            j.left(45)
+                            j.forward(10)
+                            j.back(20)
+                            j.forward(10)
+                            j.right(90)
+                            j.forward(10)
+                            j.back(20)
+                            j.forward(10)
+                            j.left(45)
+
+                else:
+                    # kui ei ole laeva ehk mööda
+                    j.penup()
+                    j.pencolor("#A9A9A9")
+                    j.goto(-575 + (50 * posx), -225 + (50 *  posy))
+                    j.pendown()
+                    j.dot(15)
+                    
+                    arvutip.laud[9-posy][posx] = 4
+            
+    
+    print("valiklaud (kontroll hetkel) - mängija laud mängijale")
+    pp.pprint(kontroll)
+    print("arvutip - mängija laud arvutile")
+    pp.pprint(arvutip.laud)
+    
     return None
 
 # Normal:
@@ -1290,14 +1504,14 @@ def atk_pomm():
         
         mangijap.laud[posy][posx] = 3
         
-        
+    '''  
     print("arvutil - arvuti laud arvutile")
     pp.pprint(arvutil.laud)
     print("mangijap - arvuti laud mängijale")
     pp.pprint(mangijap.laud)
 
     print("rünnak asukoht:", asukoht)
-    
+    '''
     # kontroll kas mängija on võitnud
     
     
@@ -1506,6 +1720,12 @@ def game_loop():
     print(valiklaud.laevapikkused)
     
     # lõplik mängulaud
+    
+    # lõplik mängija laevadevalik
+    global kontroll
+    kontroll = list(deepcopy(valiklaud.laud))
+    kontroll.reverse()
+    
     
     # valib raskustaseme vastavalt mängija algsele soovile
     if (raskustase == 1):
