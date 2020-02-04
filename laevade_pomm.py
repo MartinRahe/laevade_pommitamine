@@ -178,10 +178,50 @@ def rt(raskus):
 #
 # Väga Lihtne
 def veryeasy():
+    easy()
     return None
+
+def atk_veryeasy():
+    global valiklaud
+    # xpos
+    # ypos
+    # kas on -> joonista rist
+    # kui ei ole -> joonista hall ring
     # arvutip ja arvutil
     # arvutip - kuidas arvuti pommitab mängijat
     # arvutil - kuidas arvuti paigutab enda laevad
+    posx = randint(0, 9)
+    posy = randint(0, 9)
+    
+    if valiklaud.laud[posy][posx] == 1:
+        #j.goto(125 + 50 * asukoht[0], -225 + 50 * asukoht[1])
+        j.goto(-575 + (50 * posx), -225 + (50 *  posy))
+        j.pendown()
+        j.pencolor("#FF0000")
+        j.left(45)
+        j.forward(20)
+        j.back(40)
+        j.forward(20)
+        j.right(90)
+        j.forward(20)
+        j.back(40)
+        j.forward(20)
+        j.left(45)
+
+    else:
+        #kui ei ole laeva
+        j.pencolor("#A9A9A9")
+        #j.goto(125 + 50 * asukoht[0], -225 + 50 * asukoht[1])
+        j.goto(-575 + (50 * posx), -225 + (50 *  posy))
+        j.pendown()
+        j.dot(15)
+
+    j.penup()
+    j.goto(102 + (50 * asukoht[0]), -247 + (50 *asukoht[1]))
+    # mangijal vaja ka märkida
+    
+    return None
+    
 
 # 
 # Suvaline laevade paigutus läbi tõenäosuste kasutades randinti
@@ -457,6 +497,7 @@ def easy():
     laevapikkused1 = [len(i) for i in laevad]
     print(laevapikkused1,len(laevapikkused1))
     print(time()-algaeg)
+    
     '''
     x = randint(0, 10) 
     y = randint(0, 10)
@@ -468,27 +509,41 @@ def easy():
     else:
         arvutip.laud[y][x] = 'O'
     '''
-  
+
+def atk_easy():
+    return None
+
 # Normal:
 def normal():
     return None
+
+def atk_normal():
+    return None
+
 #
 # 
 # Hard:
 def hard():
     return None
-    
+
+def atk_hard():
+    return None
+
 #
 #
 # NaiveBayesGuesser algoritm
 # Extreme:
 def extreme():
+    return None
+
+def atk_extreme():
     global arvutip
     nb = NaiveBayesGuesser(arvutip)
     n = 0
     while n != 4:
         print("guess:", nb.get_guess(arvutip.laud))
         n += 1
+    return None
 
 #
 #
@@ -496,6 +551,9 @@ def extreme():
 # paigutatud laevad 
 # Impossible:
 def impossible():
+    return None
+
+def atk_impossible():
   mangijal.laud[3][4] = '@'
   koord = [] #Leiab mängija laevad
   for i in range(mangijal.pikkus):
@@ -508,6 +566,7 @@ def impossible():
       print(koord)
       arvutip.laud.laud[koord[0][0]][koord[0][1]] = 'x'
       koord.pop(0)
+    return None
     
 # 3. -----------------------------------------------
 # Siin asuvad kõik laudadel liikumiseks/tulistamiseks jms vajalikud funktsioonid
@@ -993,14 +1052,15 @@ def atk_ules():
     global asukoht
     global kaik
     global j
+    
     if not kaik:
         return None
+    
     global lastpress
     if time() - lastpress < 0.6:
         return None
     lastpress = time()
     j.pendown()
-    print("rünnak asukoht:", asukoht)
     if asukoht[1] < 9:
         asukoht[1] += 1
     else:
@@ -1009,28 +1069,35 @@ def atk_ules():
     for i in range(4):
         j.forward(45)
         j.right(90)
+        
     j.goto(102 + 50 * asukoht[0], -247 + 50 * asukoht[1])
     j.pencolor("#00FF00")
     for i in range(4):
         j.forward(45)
         j.right(90)
     j.penup()
+    print("rünnak asukoht:", asukoht)
+    
 # 3.2. ------------------------------------------------
 # Siin asuvad ründamisaknas olevate nuppude funktsioonid
+
+# tingimuslause if not kaik kontrollib, kas oli mängija kord rünnata.
+# On vajalik siis, kui implementeerida arvutile mingi "mõltemisaeg"
 
 # ründamisaknas kasutatava nupu "S" (ehk south) funktsioon
 def atk_alla():
     global asukoht
     global kaik
     global j
+    
     if not kaik:
         return None
+    
     global lastpress
     if time() - lastpress < 0.6:
         return None
     lastpress = time()
     j.pendown()
-    print("rünnak asukoht:", asukoht)
     if asukoht[1] > 0:
         asukoht[1] -= 1
     else:
@@ -1045,20 +1112,22 @@ def atk_alla():
         j.forward(45)
         j.right(90)
     j.penup()
+    print("rünnak asukoht:", asukoht)
 
 # ründamisaknas kasutatava nupu "W" (ehk west) funktsioon
 def atk_vasakule():
     global asukoht
     global kaik
     global j
+    
     if not kaik:
         return None
+    
     global lastpress
     if time() - lastpress < 0.6:
         return None
     lastpress = time()
     j.pendown()
-    print("rünnak asukoht:", asukoht)
     if asukoht[0] > 0:
         asukoht[0] -= 1
     else:
@@ -1073,20 +1142,22 @@ def atk_vasakule():
         j.forward(45)
         j.right(90)
     j.penup()
+    print("rünnak asukoht:", asukoht)
 
 # ründamisaknas kasutatava nupu "E" (ehk east) funktsioon
 def atk_paremale():
     global asukoht
     global kaik
     global j
+    
     if not kaik:
         return None
+    
     global lastpress
     if time() - lastpress < 0.6:
         return None
     lastpress = time()
     j.pendown()
-    print("rünnak asukoht:", asukoht)
     if asukoht[0] < 9:
         asukoht[0] += 1
     else:
@@ -1101,30 +1172,37 @@ def atk_paremale():
         j.forward(45)
         j.right(90)
     j.penup()
+    print("rünnak asukoht:", asukoht)
 
 # ründamisaknas kasutatava nupu "Märgista" funktsioon
+# märgi tähistus listis 2
 def atk_mark():
     global asukoht
     global kaik
     global j
+    
     if not kaik:
         return None
-    global lastpress
-    lastpress += 0.1
-    j.pencolor("#A9A9A9")
-    j.goto(125 + 50 * asukoht[0], -225 + 50 * asukoht[1])
-    j.pendown()
-    j.left(45)
-    j.forward(10)
-    j.back(20)
-    j.forward(10)
-    j.right(90)
-    j.forward(10)
-    j.back(20)
-    j.forward(10)
-    j.left(45)
-    j.penup()
-    j.goto(102 + 50 * asukoht[0], -247 + 50 * asukoht[1])
+    
+    if mangijap.laud[asukoht[1]][asukoht[0]] == 0:
+        global lastpress
+        lastpress += 0.1
+        j.pencolor("#A9A9A9")
+        j.goto(125 + 50 * asukoht[0], -225 + 50 * asukoht[1])
+        j.pendown()
+        j.left(45)
+        j.forward(10)
+        j.back(20)
+        j.forward(10)
+        j.right(90)
+        j.forward(10)
+        j.back(20)
+        j.forward(10)
+        j.left(45)
+        j.penup()
+        j.goto(102 + 50 * asukoht[0], -247 + 50 * asukoht[1])
+        
+        mangijap.laud[asukoht[1]][asukoht[0]] = 2
     
     print("rünnak asukoht:", asukoht)
 
@@ -1133,63 +1211,113 @@ def atk_unmark():
     global asukoht
     global kaik
     global j
+    
     if not kaik:
         return None
-    global lastpress
-    lastpress += 0.1
-    j.pencolor("#FFFFFF")
-    j.goto(125 + 50 * asukoht[0], -225 + 50 * asukoht[1])
-    j.pendown()
-    j.left(45)
-    j.forward(10)
-    j.back(20)
-    j.forward(10)
-    j.right(90)
-    j.forward(10)
-    j.back(20)
-    j.forward(10)
-    j.left(45)
-    j.penup()
-    j.goto(102 + 50 * asukoht[0], -247 + 50 * asukoht[1])
+    
+    if mangijap.laud[asukoht[1]][asukoht[0]] == 2:
+        global lastpress
+        lastpress += 0.1
+        j.pencolor("#FFFFFF")
+        j.goto(125 + 50 * asukoht[0], -225 + 50 * asukoht[1])
+        j.pendown()
+        j.left(45)
+        j.forward(10)
+        j.back(20)
+        j.forward(10)
+        j.right(90)
+        j.forward(10)
+        j.back(20)
+        j.forward(10)
+        j.left(45)
+        j.penup()
+        j.goto(102 + 50 * asukoht[0], -247 + 50 * asukoht[1])
+        
+        mangijap.laud[asukoht[1]][asukoht[0]] = 0
     
     print("rünnak asukoht:", asukoht)
 
 # ründamisaknas kasutatava nupu "allahu akbar" funktsioon
 def atk_pomm():
+    global lastpress
     global asukoht
     global kaik
     global j
     
-    # hetkel ei tööta, aga mõeldud selleks, et mängija nupud ei töötaks,
-    # kui ei ole mängija käik
     if not kaik:
         return None
-
+    
+    if time() - lastpress < 0.6:
+        return None
+    lastpress = time()
     # kui on laev
-    j.goto(125 + 50 * asukoht[0], -225 + 50 * asukoht[1])
-    j.pencolor("#0000FF")
-    j.pendown()
-    j.dot(23)
-    j.pencolor("#FF0000")
-    j.left(45)
-    j.forward(20)
-    j.back(40)
-    j.forward(20)
-    j.right(90)
-    j.forward(20)
-    j.back(40)
-    j.forward(20)
-    j.left(45)
-    j.penup()
-    j.goto(102 + 50 * asukoht[0], -247 + 50 * asukoht[1])
+    posx = asukoht[0]
+    posy = asukoht[1]
+    if mangijap.laud[posy][posx] == 2:
+        atk_unmark()
+        
+    if arvutil.laud[posy][posx] == 1:
+        j.goto(125 + 50 * asukoht[0], -225 + 50 * asukoht[1])
+        j.pencolor("#0000FF")
+        j.pendown()
+        j.dot(23)
+        j.pencolor("#FF0000")
+        j.left(45)
+        j.forward(20)
+        j.back(40)
+        j.forward(20)
+        j.right(90)
+        j.forward(20)
+        j.back(40)
+        j.forward(20)
+        j.left(45)
+        j.penup()
+        j.goto(102 + 50 * asukoht[0], -247 + 50 * asukoht[1])
+        
+        # märgib tabamuse
+        mangijap.laud[posy][posx] = 4
+        arvutil.laud[posy][posx] = 4
+        
+    elif mangijap.laud[posy][posx] in [0, 2]:
     
-    # kui ei ole laeva
-    
-
+        #kui ei ole laeva
+        j.pencolor("#A9A9A9")
+        j.goto(125 + 50 * asukoht[0], -225 + 50 * asukoht[1])
+        j.pendown()
+        j.dot(15)
+        j.penup()
+        j.goto(102 + 50 * asukoht[0], -247 + 50 * asukoht[1])
+        
+        mangijap.laud[posy][posx] = 3
+        
+        
+    print("arvutil - arvuti laud arvutile")
     pp.pprint(arvutil.laud)
+    print("mangijap - arvuti laud mängijale")
     pp.pprint(mangijap.laud)
 
     print("rünnak asukoht:", asukoht)
+    
+    # kontroll kas mängija on võitnud
+    
+    
+    # arvuti ründab
+    if raskustase == 1:
+        atk_veryeasy()
+    elif raskustase == 2:
+        atk_easy()
+    elif raskustase == 3:
+        atk_normal()
+    elif raskustase == 4:
+        atk_hard()
+    elif raskustase == 5:
+        atk_extreme()
+    elif raskustase == 6:
+        atk_impossible()
+    
+    # kontroll kas arvuti on võitnud
+    
+    
 # 4. ----------------------------------
 # Siin asub main mängu loop, mis jooksutab mängu
 # ehk seob loogiliselt kokku kõik eelnevalt defineeritud
@@ -1206,47 +1334,47 @@ def game_loop():
     global rask
 
     # sisselogimisaken
-    login = Tk()
-    login.title("Login")
-    login.geometry('300x210')
-
-    loginmsg = Label(login, text="Mängimiseks pead sisse logima.")
-    loginmsg.place(x=65, y=5)
-    kas = Label(login, text="Kasutajanimi:")
-    kas.place(x=75, y=40)
-    kasutaja = Entry(login)
-    kasutaja.place(x=75, y=60, width=150)
-    par = Label(login, text="Parool:")
-    par.place(x=75, y=90)
-    parool = Entry(login, show="*")
-    parool.place(x=75, y=110, width=150)
-    nupp1 = ttk.Button(login, text="Logi sisse", command=logi)
-    nupp1.place(x=75, y=140, width=150)
-    nupp2 = ttk.Button(login, text="Mul pole veel kasutajat", command=polekas)
-    nupp2.place(x=75, y=170, width=150)
-    
-    sobib = False
-    login.mainloop()
-    if not sobib:
-        sys.exit()
-
-    playerfile = open(dir + "/" + kasu + ".txt", "r", encoding="utf-8")
-
-    # tervituse aken
-    tervitus = Tk()
-    tervitus.title("Tere tulemast, " + kasu)
-    tervitus.geometry('300x110')
-    msg = Label(tervitus, text="Mida soovid teha?")
-    msg.place(x=100, y=5)
-    nupp1 = ttk.Button(tervitus, text="Lugeda reegleid", command=reeg)
-    nupp1.place(x=75, y=40, width=150)
-    nupp2 = ttk.Button(tervitus, text="Mängida", command=mang)
-    nupp2.place(x=75, y=70, width=150)
-    
-    sobib = False
-    tervitus.mainloop()
-    if not sobib:
-        sys.exit()
+#     login = Tk()
+#     login.title("Login")
+#     login.geometry('300x210')
+# 
+#     loginmsg = Label(login, text="Mängimiseks pead sisse logima.")
+#     loginmsg.place(x=65, y=5)
+#     kas = Label(login, text="Kasutajanimi:")
+#     kas.place(x=75, y=40)
+#     kasutaja = Entry(login)
+#     kasutaja.place(x=75, y=60, width=150)
+#     par = Label(login, text="Parool:")
+#     par.place(x=75, y=90)
+#     parool = Entry(login, show="*")
+#     parool.place(x=75, y=110, width=150)
+#     nupp1 = ttk.Button(login, text="Logi sisse", command=logi)
+#     nupp1.place(x=75, y=140, width=150)
+#     nupp2 = ttk.Button(login, text="Mul pole veel kasutajat", command=polekas)
+#     nupp2.place(x=75, y=170, width=150)
+#     
+#     sobib = False
+#     login.mainloop()
+#     if not sobib:
+#         sys.exit()
+# 
+#     playerfile = open(dir + "/" + kasu + ".txt", "r", encoding="utf-8")
+# 
+#     # tervituse aken
+#     tervitus = Tk()
+#     tervitus.title("Tere tulemast, " + kasu)
+#     tervitus.geometry('300x110')
+#     msg = Label(tervitus, text="Mida soovid teha?")
+#     msg.place(x=100, y=5)
+#     nupp1 = ttk.Button(tervitus, text="Lugeda reegleid", command=reeg)
+#     nupp1.place(x=75, y=40, width=150)
+#     nupp2 = ttk.Button(tervitus, text="Mängida", command=mang)
+#     nupp2.place(x=75, y=70, width=150)
+#     
+#     sobib = False
+#     tervitus.mainloop()
+#     if not sobib:
+#         sys.exit()
 
     # raskustaseme aken
     rask = Tk()
