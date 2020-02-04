@@ -1,10 +1,24 @@
 #17.01.20
+#04.02.20
+
+Üldine info
+1) Üksikud laevad tuleb ühendada
+2) ajalooaken
+3) kaik muutuja vajab implementeerimist
+
+
   1. Väga lihtne
     1.1. Suvaline paigutus
     1.2. Suvaline ründamine
+      1.2.1. võib lasta samasse kohta
+      1.2.2. ei otsi kogu laeva üles
   2. Lihtne
     1.1. Suvaline paigutus
     1.2. Otsib kogu laeva üles, kui on ühe tüki leidnud
+      1.2.1. arvuti märgistab võimatud ruudud peale lasku
+      1.2.2. arvuti otsib edasi, kui saab pihta, aga ei ole põhjas
+      1.2.3. arvuti laseb suvaliselt kuni leiab ühe laeva
+      1.2.4. arvuti ei lase samasse kohta mitu korda
   3. Keskmine
     3.1. Heatmapi järgi laevade paigutamine
     3.2. Diagonaalide järgi orienteerudes tulistamine
