@@ -7,9 +7,9 @@ import tkinter.scrolledtext as tkst
 import turtle
 import base64
 import os
-from time import time
+from time import time, sleep
 import pprint
-from random import randint, choice
+from random import randint, choice, random
 from copy import deepcopy
 #from classifier import NaiveBayesGuesser
 
@@ -50,7 +50,10 @@ pp = pprint.PrettyPrinter(indent=4)
 
 numtolet = {0:"A", 1:"B", 2:"C", 3:"D", 4:"E", 5:"F", 6:"G", 7:"H", 8:"I", 9:"J"}
 puudalla = ["No mida", "Kes siis nii teeb?", "Tundub tuttav?", "Suht kasutu"]
+voidusonumid = ["Palju õnne, sa võitsid."]
+kaotussonumid = ["Sel korral pidid arvutile alla vanduma."]
 
+"""
 # vajalikud lauad, peaks veel üle vaatama!
 # valikute tegemise laud ehk
 # mängija laud talle endale kuvatuna
@@ -70,6 +73,7 @@ arvutip = Laud()
 # mängija pommitamise informatsioon ehk
 # arvuti laud mängijale kuvatuna
 mangijap = Laud()
+"""
 
 
 def encode(string):
@@ -1521,6 +1525,8 @@ def atk_pomm():
     global kaigunumber
     global mangijatabamus
     global arvutitabamus
+    global kogulaevad
+    global voit
 
     if not kaik:
         return None
@@ -1594,6 +1600,14 @@ def atk_pomm():
     print("rünnak asukoht:", asukoht)
     '''
     # kontroll kas mängija on võitnud
+    if mangijatabamus == kogulaevad:
+        voit = 1
+        voiduteade()
+        return None
+    kaik = False
+
+    #arvuti mõtleb
+    sleep(5*random()**10)
 
     # arvuti ründab
     if raskustase == 1:
@@ -1610,8 +1624,41 @@ def atk_pomm():
         atk_impossible()
 
     # kontroll kas arvuti on võitnud
-    print(mangijatabamus, arvutitabamus)
+    if arvutitabamus == kogulaevad:
+        voit = -1
+        voiduteade()
+    else:
+        kaik = True
+    print(mangijatabamus, arvutitabamus, kogulaevad)
 
+def voiduteade():
+    global laud
+    if voit == 1:
+        mb.showinfo("VÕIT", choice(voidusonumid))
+    elif voit == -1:
+        mb.showinfo("KAOTUS", choice(kaotussonumid))
+    else:
+        return None
+    teade = Toplevel(laud)
+    teade.title("Uuesti?")
+    teade.geometry('250x100')
+    teademsg = Label(teade, text="Kas soovid uuesti mängida?")
+    teademsg.place(x=50, y=5)
+    nupp1 = ttk.Button(teade, text="Jah", command=uusjah)
+    nupp1.place(x=90, y=30, width=70)
+    nupp2 = ttk.Button(teade, text="Ei", command=uusei)
+    nupp2.place(x=90, y=60, width=70)
+
+def uusjah():
+    global uusmang
+    global laud
+    uusmang = True
+    laud.destroy()
+def uusei():
+    global uusmang
+    global laud
+    uusmang = False
+    laud.destroy()
 
 # 4. ----------------------------------
 # Siin asub main mängu loop, mis jooksutab mängu
@@ -1631,6 +1678,10 @@ def game_loop():
     global kaigunumber
     global mangijatabamus
     global arvutitabamus
+    global kogulaevad
+    global voit
+    global laud
+    global uusmang
 
     #sisselogimisaken
     login = Tk()
@@ -1675,264 +1726,290 @@ def game_loop():
     if not sobib:
         sys.exit()
 
-    # raskustaseme aken
-    rask = Tk()
-    rask.title("Raskustase")
-    rask.geometry('300x230')
-    msg = Label(rask, text="Vali endale sobiv raskustase.")
-    msg.place(x=73, y=5)
-    nupp1 = ttk.Button(rask, text="Väga lihtne", command=lambda: rt(1))
-    nupp1.place(x=75, y=40, width=150)
-    nupp2 = ttk.Button(rask, text="Lihtne", command=lambda: rt(2))
-    nupp2.place(x=75, y=70, width=150)
-    nupp3 = ttk.Button(rask, text="Keskmine", command=lambda: rt(3))
-    nupp3.place(x=75, y=100, width=150)
-    nupp4 = ttk.Button(rask, text="Raske", command=lambda: rt(4))
-    nupp4.place(x=75, y=130, width=150)
-    nupp5 = ttk.Button(rask, text="Ekstreemne", command=lambda: rt(5))
-    nupp5.place(x=75, y=160, width=150)
-    nupp6 = ttk.Button(rask, text="Võimatu", command=lambda: rt(6))
-    nupp6.place(x=75, y=190, width=150)
+    uusmang = True
+    while uusmang:
+        # vajalikud lauad, peaks veel üle vaatama!
+        # valikute tegemise laud ehk
+        # mängija laud talle endale kuvatuna
+        global valiklaud
+        valiklaud = Laud()
+        pp.pprint(valiklaud.laud)
 
-    sobib = False
-    rask.mainloop()
-    if not sobib:
-        sys.exit()
-    # print(raskustase)
+        # kolmas laud (l nagu laev)
+        # arvuti laevade informatsiooni
+        # ehk arvuti laud "talle kuvatuna"
+        global arvutil
+        arvutil = Laud()
 
-    # laevavaliku aken
-    laevavalik = Tk()
-    laevavalik.title("Laevade paigutamine")
-    canvas = Canvas(master=laevavalik, width=700, height=700)
-    canvas.pack()
+        # neljas laud (p nagu pomm)
+        # arvuti pommitamise informatsiooni (arvuti ründab mängijat)
+        global arvutip
+        arvutip = Laud()
 
-    # rawturtle objekt
-    global j
-    j = turtle.RawTurtle(canvas)
-    j.speed(0)
-    j.hideturtle()
-    j.pensize(10)
-    j.penup()
-    for i in range(10):
-        j.goto(-225 + 50*i, -300)
-        j.write(numtolet[i], True, "center", ("Arial", 30, "bold"))
-    for i in range(11):
-        j.goto(-250, -250 + 50 * i)
-        j.pendown()
-        j.forward(500)
+        # viies laud (p nagu pomm)
+        # mängija pommitamise informatsioon ehk
+        # arvuti laud mängijale kuvatuna
+        global mangijap
+        mangijap = Laud()
+        # raskustaseme aken
+        rask = Tk()
+        rask.title("Raskustase")
+        rask.geometry('300x230')
+        msg = Label(rask, text="Vali endale sobiv raskustase.")
+        msg.place(x=73, y=5)
+        nupp1 = ttk.Button(rask, text="Väga lihtne", command=lambda: rt(1))
+        nupp1.place(x=75, y=40, width=150)
+        nupp2 = ttk.Button(rask, text="Lihtne", command=lambda: rt(2))
+        nupp2.place(x=75, y=70, width=150)
+        nupp3 = ttk.Button(rask, text="Keskmine", command=lambda: rt(3))
+        nupp3.place(x=75, y=100, width=150)
+        nupp4 = ttk.Button(rask, text="Raske", command=lambda: rt(4))
+        nupp4.place(x=75, y=130, width=150)
+        nupp5 = ttk.Button(rask, text="Ekstreemne", command=lambda: rt(5))
+        nupp5.place(x=75, y=160, width=150)
+        nupp6 = ttk.Button(rask, text="Võimatu", command=lambda: rt(6))
+        nupp6.place(x=75, y=190, width=150)
+
+        sobib = False
+        rask.mainloop()
+        if not sobib:
+            sys.exit()
+        # print(raskustase)
+
+        # laevavaliku aken
+        laevavalik = Tk()
+        laevavalik.title("Laevade paigutamine")
+        canvas = Canvas(master=laevavalik, width=700, height=700)
+        canvas.pack()
+
+        # rawturtle objekt
+        global j
+        j = turtle.RawTurtle(canvas)
+        j.speed(0)
+        j.hideturtle()
+        j.pensize(10)
         j.penup()
-    j.left(90)
-    for i in range(10):
-        j.goto(-280, -248 + 50*i)
-        j.write(str(i), True, "left", ("Arial", 30, "bold"))
-    for i in range(11):
-        j.goto(-250 + 50 * i, -250)
+        for i in range(10):
+            j.goto(-225 + 50*i, -300)
+            j.write(numtolet[i], True, "center", ("Arial", 30, "bold"))
+        for i in range(11):
+            j.goto(-250, -250 + 50 * i)
+            j.pendown()
+            j.forward(500)
+            j.penup()
+        j.left(90)
+        for i in range(10):
+            j.goto(-280, -248 + 50*i)
+            j.write(str(i), True, "left", ("Arial", 30, "bold"))
+        for i in range(11):
+            j.goto(-250 + 50 * i, -250)
+            j.pendown()
+            j.forward(500)
+            j.penup()
+        j.pensize(5)
+        j.goto(-248, -247)
+        asukoht = [0, 0]
+        j.pencolor("#00FF00")
         j.pendown()
-        j.forward(500)
+        for i in range(4):
+            j.forward(45)
+            j.right(90)
         j.penup()
-    j.pensize(5)
-    j.goto(-248, -247)
-    asukoht = [0, 0]
-    j.pencolor("#00FF00")
-    j.pendown()
-    for i in range(4):
-        j.forward(45)
+
+        global control
+        control = Toplevel(laevavalik)
+        control.title("Paigutaja kontrollimine")
+        control.geometry('300x240')
+
+        global lastpress
+        lastpress = 0
+        nupp1 = ttk.Button(control, text="N", command=valik_ules)
+        nupp1.place(x=75, y=20, width=150)
+        nupp2 = ttk.Button(control, text="W", command=valik_vasakule)
+        nupp2.place(x=75, y=45, width=75)
+        nupp3 = ttk.Button(control, text="E", command=valik_paremale)
+        nupp3.place(x=150, y=45, width=75)
+        nupp4 = ttk.Button(control, text="S", command=valik_alla)
+        nupp4.place(x=75, y=70, width=150)
+        nupp5 = ttk.Button(control, text="Paiguta", command=valik_paiguta)
+        nupp5.place(x=75, y=120, width=150)
+        nupp6 = ttk.Button(control, text="Eemalda", command=valik_eemalda)
+        nupp6.place(x=75, y=145, width=150)
+        nupp7 = ttk.Button(control, text="Valmis", command=valm1)
+        nupp7.place(x=75, y=200, width=150)
+
+        # jooksutab laevaed valiku loopi
+        sobib = False
+        global kaik
+        kaik = True
+        laevavalik.mainloop()
+        if not sobib:
+            sys.exit()
+
+        # mangijal on mängija laud arvutile kuvatuna
+        mangijal = valiklaud
+        pp.pprint(valiklaud.laud)
+        print()
+
+        for i in mangijal.laud:
+            for s in range(10):
+                if i[s] == "x":
+                    i[s] = 0
+
+        pp.pprint(mangijal.laud)
+        print()
+        pp.pprint(valiklaud.laud)
+
+        for y in range(10):
+            for x in range(10):
+                if valiklaud.laud[y][x] == 1 and [x, y] not in valiklaud.kaidud:
+                    laev = [[x, y]]
+                    valiklaud.kaidud.append([x, y])
+                    a = 1
+                    while x + a <= 9:
+                        if valiklaud.laud[y][x + a] == 1:
+                            laev.append([x + a, y])
+                            valiklaud.kaidud.append([x + a, y])
+                            a += 1
+                        else:
+                            break
+                    a = 1
+                    while y + a <= 9:
+                        if valiklaud.laud[y + a][x] == 1:
+                            laev.append([x, y + a])
+                            valiklaud.kaidud.append([x, y + a])
+                            a += 1
+                        else:
+                            break
+                    valiklaud.laevad.append(laev)
+        print(valiklaud.laevad)
+        valiklaud.laevapikkused = [len(i) for i in valiklaud.laevad]
+        print(valiklaud.laevapikkused)
+        kogulaevad = sum(valiklaud.laevapikkused)
+        print(kogulaevad)
+
+        # lõplik mängulaud
+        print("EKRE")
+
+        # lõplik mängija laevadevalik
+        global kontroll
+        kontroll = list(deepcopy(valiklaud.laud))
+        kontroll.reverse()
+
+        # valib raskustaseme vastavalt mängija algsele soovile
+        if (raskustase == 1):
+            veryeasy()
+        elif (raskustase == 2):
+            easy()
+        elif (raskustase == 3):
+            normal()
+        elif (raskustase == 4):
+            hard()
+        elif (raskustase == 5):
+            extreme()
+        elif (raskustase == 6):
+            impossible()
+
+        laud = Tk()
+        laud.title("Laevade ründamine")
+        canvas = Canvas(master=laud, width=1400, height=700)
+        canvas.pack()
+
+        j = turtle.RawTurtle(canvas)
+        j.speed(0)
+        j.hideturtle()
+        j.pensize(10)
+        j.penup()
+        for i in range(10):
+            j.goto(-575 + 50*i, -300)
+            j.write(numtolet[i], True, "center", ("Arial", 30, "bold"))
+        for i in range(11):
+            j.goto(-600, -250 + 50 * i)
+            j.pendown()
+            j.forward(500)
+            j.penup()
+        j.left(90)
+        for i in range(10):
+            j.goto(-630, -248 + 50*i)
+            j.write(str(i), True, "left", ("Arial", 30, "bold"))
+        for i in range(11):
+            j.goto(-600 + 50 * i, -250)
+            j.pendown()
+            j.forward(500)
+            j.penup()
         j.right(90)
-    j.penup()
+        j.goto(-350, 270)
+        j.write("SINU LAUD", True, "center", ("Arial", 40, "bold"))
+        for i in range(10):
+            j.goto(125 + 50*i, -300)
+            j.write(numtolet[i], True, "center", ("Arial", 30, "bold"))
+        for i in range(11):
+            j.goto(100, -250 + 50 * i)
+            j.pendown()
+            j.forward(500)
+            j.penup()
+        j.left(90)
+        for i in range(10):
+            j.goto(70, -248 + 50*i)
+            j.write(str(i), True, "left", ("Arial", 30, "bold"))
+        for i in range(11):
+            j.goto(100 + 50 * i, -250)
+            j.pendown()
+            j.forward(500)
+            j.penup()
+        j.goto(350, 270)
+        j.write("ARVUTI LAUD", False, "center", ("Arial", 40, "bold"))
 
-    global control
-    control = Toplevel(laevavalik)
-    control.title("Paigutaja kontrollimine")
-    control.geometry('300x240')
+        j.pencolor("#0000FF")
+        j.pensize(23)
+        for i in valiklaud.laevad:
+            j.goto(-575 + 50 * i[0][0], -225 + 50 * i[0][1])
+            j.pendown()
+            for e in range(len(i)):
+                j.goto(-575 + 50 * i[e][0], -225 + 50 * i[e][1])
+            j.penup()
 
-    global lastpress
-    lastpress = 0
-    nupp1 = ttk.Button(control, text="N", command=valik_ules)
-    nupp1.place(x=75, y=20, width=150)
-    nupp2 = ttk.Button(control, text="W", command=valik_vasakule)
-    nupp2.place(x=75, y=45, width=75)
-    nupp3 = ttk.Button(control, text="E", command=valik_paremale)
-    nupp3.place(x=150, y=45, width=75)
-    nupp4 = ttk.Button(control, text="S", command=valik_alla)
-    nupp4.place(x=75, y=70, width=150)
-    nupp5 = ttk.Button(control, text="Paiguta", command=valik_paiguta)
-    nupp5.place(x=75, y=120, width=150)
-    nupp6 = ttk.Button(control, text="Eemalda", command=valik_eemalda)
-    nupp6.place(x=75, y=145, width=150)
-    nupp7 = ttk.Button(control, text="Valmis", command=valm1)
-    nupp7.place(x=75, y=200, width=150)
-
-    # jooksutab laevaed valiku loopi
-    sobib = False
-    global kaik
-    kaik = True
-    laevavalik.mainloop()
-    if not sobib:
-        sys.exit()
-
-    # mangijal on mängija laud arvutile kuvatuna
-    mangijal = valiklaud
-    pp.pprint(valiklaud.laud)
-    print()
-
-    for i in mangijal.laud:
-        for s in range(10):
-            if i[s] == "x":
-                i[s] = 0
-
-    pp.pprint(mangijal.laud)
-    print()
-    pp.pprint(valiklaud.laud)
-
-    for y in range(10):
-        for x in range(10):
-            if valiklaud.laud[y][x] == 1 and [x, y] not in valiklaud.kaidud:
-                laev = [[x, y]]
-                valiklaud.kaidud.append([x, y])
-                a = 1
-                while x + a <= 9:
-                    if valiklaud.laud[y][x + a] == 1:
-                        laev.append([x + a, y])
-                        valiklaud.kaidud.append([x + a, y])
-                        a += 1
-                    else:
-                        break
-                a = 1
-                while y + a <= 9:
-                    if valiklaud.laud[y + a][x] == 1:
-                        laev.append([x, y + a])
-                        valiklaud.kaidud.append([x, y + a])
-                        a += 1
-                    else:
-                        break
-                valiklaud.laevad.append(laev)
-    print(valiklaud.laevad)
-    valiklaud.laevapikkused = [len(i) for i in valiklaud.laevad]
-    print(valiklaud.laevapikkused)
-    kogulaevad = sum(valiklaud.laevapikkused)
-    print(kogulaevad)
-
-    # lõplik mängulaud
-    print("EKRE")
-
-    # lõplik mängija laevadevalik
-    global kontroll
-    kontroll = list(deepcopy(valiklaud.laud))
-    kontroll.reverse()
-
-    # valib raskustaseme vastavalt mängija algsele soovile
-    if (raskustase == 1):
-        veryeasy()
-    elif (raskustase == 2):
-        easy()
-    elif (raskustase == 3):
-        normal()
-    elif (raskustase == 4):
-        hard()
-    elif (raskustase == 5):
-        extreme()
-    elif (raskustase == 6):
-        impossible()
-
-    laud = Tk()
-    laud.title("Laevade ründamine")
-    canvas = Canvas(master=laud, width=1400, height=700)
-    canvas.pack()
-
-    j = turtle.RawTurtle(canvas)
-    j.speed(0)
-    j.hideturtle()
-    j.pensize(10)
-    j.penup()
-    for i in range(10):
-        j.goto(-575 + 50*i, -300)
-        j.write(numtolet[i], True, "center", ("Arial", 30, "bold"))
-    for i in range(11):
-        j.goto(-600, -250 + 50 * i)
+        j.pensize(5)
+        j.goto(102, -247)
+        asukoht = [0, 0]
+        j.pencolor("#00FF00")
         j.pendown()
-        j.forward(500)
-        j.penup()
-    j.left(90)
-    for i in range(10):
-        j.goto(-630, -248 + 50*i)
-        j.write(str(i), True, "left", ("Arial", 30, "bold"))
-    for i in range(11):
-        j.goto(-600 + 50 * i, -250)
-        j.pendown()
-        j.forward(500)
-        j.penup()
-    j.right(90)
-    j.goto(-350, 270)
-    j.write("SINU LAUD", True, "center", ("Arial", 40, "bold"))
-    for i in range(10):
-        j.goto(125 + 50*i, -300)
-        j.write(numtolet[i], True, "center", ("Arial", 30, "bold"))
-    for i in range(11):
-        j.goto(100, -250 + 50 * i)
-        j.pendown()
-        j.forward(500)
-        j.penup()
-    j.left(90)
-    for i in range(10):
-        j.goto(70, -248 + 50*i)
-        j.write(str(i), True, "left", ("Arial", 30, "bold"))
-    for i in range(11):
-        j.goto(100 + 50 * i, -250)
-        j.pendown()
-        j.forward(500)
-        j.penup()
-    j.goto(350, 270)
-    j.write("ARVUTI LAUD", False, "center", ("Arial", 40, "bold"))
-
-    j.pencolor("#0000FF")
-    j.pensize(23)
-    for i in valiklaud.laevad:
-        j.goto(-575 + 50 * i[0][0], -225 + 50 * i[0][1])
-        j.pendown()
-        for e in range(len(i)):
-            j.goto(-575 + 50 * i[e][0], -225 + 50 * i[e][1])
+        for i in range(4):
+            j.forward(45)
+            j.right(90)
         j.penup()
 
-    j.pensize(5)
-    j.goto(102, -247)
-    asukoht = [0, 0]
-    j.pencolor("#00FF00")
-    j.pendown()
-    for i in range(4):
-        j.forward(45)
-        j.right(90)
-    j.penup()
+        # pommitamise kontrollimise aken
+        control = Toplevel(laud)
+        control.title("Pommitaja kontrollimine")
+        control.geometry('300x210')
+        nupp1 = ttk.Button(control, text="N", command=atk_ules)
+        nupp1.place(x=75, y=20, width=150)
+        nupp2 = ttk.Button(control, text="W", command=atk_vasakule)
+        nupp2.place(x=75, y=45, width=75)
+        nupp3 = ttk.Button(control, text="E", command=atk_paremale)
+        nupp3.place(x=150, y=45, width=75)
+        nupp4 = ttk.Button(control, text="S", command=atk_alla)
+        nupp4.place(x=75, y=70, width=150)
+        nupp5 = ttk.Button(control, text="Märgista", command=atk_mark)
+        nupp5.place(x=75, y=120, width=150)
+        nupp6 = ttk.Button(control, text="Eemalda märgistus", command=atk_unmark)
+        nupp6.place(x=75, y=145, width=150)
+        nupp7 = ttk.Button(control, text="Allahu akbar!", command=atk_pomm)
+        nupp7.place(x=75, y=170, width=150)
 
-    # pommitamise kontrollimise aken
-    control = Toplevel(laud)
-    control.title("Pommitaja kontrollimine")
-    control.geometry('300x210')
-    nupp1 = ttk.Button(control, text="N", command=atk_ules)
-    nupp1.place(x=75, y=20, width=150)
-    nupp2 = ttk.Button(control, text="W", command=atk_vasakule)
-    nupp2.place(x=75, y=45, width=75)
-    nupp3 = ttk.Button(control, text="E", command=atk_paremale)
-    nupp3.place(x=150, y=45, width=75)
-    nupp4 = ttk.Button(control, text="S", command=atk_alla)
-    nupp4.place(x=75, y=70, width=150)
-    nupp5 = ttk.Button(control, text="Märgista", command=atk_mark)
-    nupp5.place(x=75, y=120, width=150)
-    nupp6 = ttk.Button(control, text="Eemalda märgistus", command=atk_unmark)
-    nupp6.place(x=75, y=145, width=150)
-    nupp7 = ttk.Button(control, text="Allahu akbar!", command=atk_pomm)
-    nupp7.place(x=75, y=170, width=150)
+        ajal = Toplevel(laud)
+        ajal.title("Pommitamisajalugu")
+        ajalug = tkst.ScrolledText(master=ajal, wrap=WORD, width=50, height=20)
+        ajalug.pack(padx=10, pady=10, fill=BOTH, expand=True)
+        ajalug.insert(INSERT, " "*10 + "Sinu käigud" + " "*10 + "Arvuti käigud" + "\n")
+        kaigunumber = 0
+        print(valiklaud.laevad,arvutil.laevad)
+        mangijatabamus = 0
+        arvutitabamus = 0
+        voit = 0
 
-    ajal = Toplevel(laud)
-    ajal.title("Pommitamisajalugu")
-    ajalug = tkst.ScrolledText(master=ajal, wrap=WORD, width=50, height=20)
-    ajalug.pack(padx=10, pady=10, fill=BOTH, expand=True)
-    ajalug.insert(INSERT, " "*10 + "Sinu käigud" + " "*10 + "Arvuti käigud" + "\n")
-    kaigunumber = 0
-    print(valiklaud.laevad,arvutil.laevad)
-    mangijatabamus = 0
-    arvutitabamus = 0
-
-    laud.mainloop()
+        laud.mainloop()
 
 
 game_loop()
