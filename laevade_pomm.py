@@ -578,6 +578,9 @@ def easy():
 
 def atk_easy():
     global kontroll
+    global ajalug
+    global arvutitabamus
+    global leitud
     # muidu proovi leida üles kogu laev
     # ei tulista samasse kohta
     # märgistab võimatud ruudud
@@ -586,77 +589,128 @@ def atk_easy():
     # valiklaud - mängija laevade info
 
     # 0 - teadmata
-    # 1 - tabamus
     # 2 - märgendus
-    # 3 - põhjas
-    # 4 - mööda
+    # 3 - mööda
+    # 4 - tabamus
     # 5 - uuritud tabamus
 
     # kui laual on mõni tabamus
     # tabamused tuleb märkida "loetuteks", et arvuti ei jookseks kokku
-    if (find(arvutip.laud, 1)):
+    
+    # kui tabad laeva näiteks keskelt, siis on täiesti pekkis
+    # pihtas_pohjas jamab natukene
+    # no way, et 9. valmis jõuab
 
-        tabamus_pos = find_index(arvutip.laud, 1)
-        uuritud = 0
-        moves = [[0, 1], [1, 0], [-1, 0], [0, -1]]
+    
+    if (leitud):
 
-        for move in moves:
-            if (9 - (tabamus_pos[1] + move[1]) >= 0 and 9 - (tabamus_pos[0] + move[0]) >= 0) and (
-                    9 - (tabamus_pos[1] + move[1]) <= 9 and 9 - (tabamus_pos[0] + move[0]) <= 9):
+        tabamus = False
+        while not tabamus:
+            alg = choice(leitud)
+            posx = alg[0]
+            posy = alg[1]
+            tabatud = False
+            while not tabatud:
 
-                # kõik mida arvuti kontrollib
-                j.penup()
-                j.goto(-575 + (50 * (9 - (tabamus_pos[0] + move[0]))), -225 + (50 * (tabamus_pos[1] + move[1])))
-                j.pencolor("#2f6276")  # sinakas
-                j.pendown()
-                j.dot(30)
-                j.penup()
+                moves = [[0, 1], [1, 0], [-1, 0], [0, -1]]
 
-                if arvutip.laud[9 - (tabamus_pos[1] + move[1])][tabamus_pos[0] + move[0]] == 0:
-                    # kohad kuhu arvuti tulistab
-                    j.penup()
-                    j.goto(-575 + (50 * (9 - (tabamus_pos[0] + move[0]))), -225 + (50 * (tabamus_pos[1] + move[1])))
-                    j.pencolor("#ff8847")  # oranž
-                    j.pendown()
-                    j.dot(30)
-                    j.penup()
+                kaik = choice(moves)
+                moves.remove(kaik)
+                for move in moves:
+                    if posx + move[1] >= 0 and posy + move[0] >= 0 and posx + move[1] <= 9 and posy + move[0] <= 9:
+                        if arvutip.laud[posy + move[0]][posx + move[1]] == 0:
+                            posx += move[1]
+                            posy += move[0]
+                            ajalug.insert(END, " " * 31 + numtolet[posx] + " " + str(posy))
+                            if valiklaud.laud[posy][posx] == 1:
+                                arvutitabamus += 1
+                                for laev in valiklaud.laevad:
+                                    if [posx, posy] in laev:
+                                        laev.remove([posx, posy])
+                                        if laev:
+                                            ajalug.insert(END, "  Pihtas")
+                                            arvutip.laud[posy][posx] = 4
+                                        else:
+                                            ajalug.insert(END, "  Pihtas põhjas")
+                                            leitud = []
+                                            arvutip.laud[posy][posx] = 4
+                                            moves1 = [[0, 1], [1, 0], [-1, 0], [0, -1]]
+                                            for move1 in moves1:
 
-                    # kui laseb pihta
-                    if (kontroll[9 - (tabamus_pos[1] + move[1])][tabamus_pos[0] + move[0]] == 1):
-                        print("pihtas")
-                        # hetkel pihtas, võib ka olla põhjas
-                        # tulebka joonistada
-                        arvutip.laud[9 - (tabamus_pos[1] + move[1])][tabamus_pos[0] + move[0]] = 1
+                                                # kontrollitmaks visuaalselt, mida programm kontrollib
+                                                if posx + move1[1] >= 0 and posy + move1[0] >= 0 and posx + move1[
+                                                    1] <= 9 and posy + move1[0] <= 9:
+                                                    if arvutip.laud[posy + move1[0]][posx + move1[1]] == 0:
+                                                        j.penup()
+                                                        j.goto(-575 + (50 * (posx + move1[1])),
+                                                               -225 + (50 * (posy + move1[0])))
+                                                        j.pencolor("#A9A9A9")
+                                                        j.pendown()
+                                                        j.left(45)
+                                                        j.forward(10)
+                                                        j.back(20)
+                                                        j.forward(10)
+                                                        j.right(90)
+                                                        j.forward(10)
+                                                        j.back(20)
+                                                        j.forward(10)
+                                                        j.left(45)
 
-                        j.penup()
-                        j.goto(-575 + (50 * (9 - (tabamus_pos[0] + move[0]))), -225 + (50 * (tabamus_pos[1] + move[1])))
-                        j.pendown()
-                        j.pencolor("#FF0000")
-                        j.left(45)
-                        j.forward(20)
-                        j.back(40)
-                        j.forward(20)
-                        j.right(90)
-                        j.forward(20)
-                        j.back(40)
-                        j.forward(20)
-                        j.left(45)
-                        break
+                                                        arvutip.laud[posy + move[0]][posx + move[1]] = 2
+                                j.penup()
+                                j.goto(-575 + (50 * posx), -225 + (50 * posy))
+                                j.pendown()
+                                j.pencolor("#FF0000")
+                                j.left(45)
+                                j.forward(20)
+                                j.back(40)
+                                j.forward(20)
+                                j.right(90)
+                                j.forward(20)
+                                j.back(40)
+                                j.forward(20)
+                                j.left(45)
+                                j.penup()
 
-                    else:
-                        # lasi mööda, ehk 4
-                        arvutip.laud[9 - (tabamus_pos[1] + move[1])][tabamus_pos[0] + move[0]] = 4
-                        break
+                                pos = [[1, 1], [-1, -1], [-1, 1], [1, -1]]
 
-        # kas on uuritud lõpuni
-        # jah, kui on leidnud ühe teise jupi
-        # muidu ei
+                                for item in pos:
+                                    if posx + item[0] >= 0 and posy + item[1] >= 0 and posx + item[0] <= 9 and posy + item[1] <= 9:
+                                        if arvutip.laud[posy + item[0]][posx + item[1]] == 0:
+                                            arvutip.laud[posy + item[1]][posx + item[0]] = 2
 
-        # eraldi märgistus, kui pihtas ja kui pp
-        # eraldi märgistus kohtadele, kus ei saa olla laeva
+                                            j.penup()
+                                            j.goto(-575 + (50 * (posx + item[0])), -225 + (50 * (posy + item[1])))
+                                            j.pencolor("#A9A9A9")
+                                            j.pendown()
+                                            j.left(45)
+                                            j.forward(10)
+                                            j.back(20)
+                                            j.forward(10)
+                                            j.right(90)
+                                            j.forward(10)
+                                            j.back(20)
+                                            j.forward(10)
+                                            j.left(45)
+                                            j.penup()
+                            else:
+                                j.penup()
+                                j.pencolor("#A9A9A9")
+                                j.goto(-575 + (50 * (posx + move[1])), -225 + (50 * (posy + move[0])))
+                                j.pendown()
+                                j.dot(15)
+                                j.penup()
+                                arvutip.laud[posy][posx] = 3
+                            tabatud = True
+                            tabamus = True
+                            ajalug.insert(END, "\n")
+                            break
 
-        # peab muutma mangijap lauda, et arvutit "õpetada"
-        return None
+                if tabatud:
+                    break
+
+            else:
+                leitud.remove(alg)
 
     # kui laud on tühi või kõik laevad on põhjas siis tulista suvaliselt
     else:
@@ -668,9 +722,49 @@ def atk_easy():
             posx = randint(0, 9)
             posy = randint(0, 9)
 
-            if arvutip.laud[9 - posy][posx] == 0:
+            if arvutip.laud[posy][posx] == 0:
 
                 lask = True
+                leitud.append([posx,posy])
+                ajalug.insert(END, " " * 31 + numtolet[posx] + " " + str(posy))
+                for laev in valiklaud.laevad:
+                    if [posx, posy] in laev:
+                        laev.remove([posx, posy])
+                        if laev:
+                            ajalug.insert(END, "  Pihtas")
+                            arvutip.laud[posy][posx] = 4
+                        else:
+                            ajalug.insert(END, "  Pihtas põhjas")
+                            leitud = []
+                            arvutip.laud[posy][posx] = 4
+                            moves = [[0, 1], [1, 0], [-1, 0], [0, -1]]
+
+                            for move in moves:
+
+                                # kontrollitmaks visuaalselt, mida programm kontrollib
+                                if posx + move[1] >= 0 and posy + move[0] >= 0 and posx + move[1] <= 9 and posy + move[0] <= 9:
+                                    if arvutip.laud[posy + move[0]][posx + move[1]] == 0:
+                                        j.penup()
+                                        j.goto(-575 + (50 * (posx + move[1])), -225 + (50 * (posy + move[0])))
+                                        j.pencolor("#A9A9A9")
+                                        j.pendown()
+                                        j.left(45)
+                                        j.forward(10)
+                                        j.back(20)
+                                        j.forward(10)
+                                        j.right(90)
+                                        j.forward(10)
+                                        j.back(20)
+                                        j.forward(10)
+                                        j.left(45)
+                                        j.penup()
+
+                                        arvutip.laud[posy + move[0]][posx + move[1]] = 2
+                        print(valiklaud.laevad)
+                        break
+                arvutip.laud[posy][posx] = 4
+                arvutitabamus += 1
+                ajalug.insert(END, "\n")
 
                 if valiklaud.laud[posy][posx] == 1:
                     # kui on laev ehk tabamus
@@ -687,25 +781,20 @@ def atk_easy():
                     j.back(40)
                     j.forward(20)
                     j.left(45)
+                    j.penup()
 
                     # kui pihta, siis tuleb teha ka märgistused
-                    if pihtas_pohjas(kontroll, [posy, posx], 1):
-                        # põhjas, vajalik arvutile
-                        arvutip.laud[9 - posy][posx] = 3
-                        # põhjas, vajalik kontrolliks
-                        kontroll[9 - posy][posx] = 3
-                        print("põhjas")
 
-                        # kui põhjas, siis märgendused ka üles, alla, paremale ja vasakule
-                        moves = [[0, 1], [1, 0], [-1, 0], [0, -1]]
+                    # märgistused, kui laseb pihta
+                    pos = [[1, 1], [-1, -1], [-1, 1], [1, -1]]
 
-                        for move in moves:
+                    for item in pos:
+                        if posx + item[0] >= 0 and posy + item[1] >= 0 and posx + item[0] <= 9 and posy + item[1] <= 9:
+                            if arvutip.laud[posy + item[0]][posx + item[1]] == 0:
+                                arvutip.laud[posy + item[1]][posx + item[0]] = 2
 
-                            # kontrollitmaks visuaalselt, mida programm kontrollib
-                            if (9 - (posx + move[1]) >= 0 and 9 - (posy + move[0]) >= 0) and (
-                                    9 - (posx + move[1]) <= 9 and 9 - (posy + move[0]) <= 9):
                                 j.penup()
-                                j.goto(-575 + (50 * (posx + move[1])), -225 + (50 * (posy + move[0])))
+                                j.goto(-575 + (50 * (posx + item[0])), -225 + (50 * (posy + item[1])))
                                 j.pencolor("#A9A9A9")
                                 j.pendown()
                                 j.left(45)
@@ -717,36 +806,7 @@ def atk_easy():
                                 j.back(20)
                                 j.forward(10)
                                 j.left(45)
-
-                                arvutip.laud[9 - (posy + move[0])][posx + move[1]] = 2
-
-                    else:
-                        # lasi pihta, vajalik arvutile ründamiseks
-                        arvutip.laud[9 - posy][posx] = 1
-                        # laev, mis sai pihta, vajalik pihtas_pohjas kontrolliks
-                        kontroll[9 - posy][posx] = 2
-                        print("pihtas")
-
-                    # märgistused, kui laseb pihta
-                    pos = [[1, 1], [-1, -1], [-1, 1], [1, -1]]
-
-                    for item in pos:
-                        if 9 - (posx + item[0]) >= 0 and 9 - (posy + item[1]) >= 0 and 9 - (
-                                posx + item[0]) <= 9 and 9 - (posy + item[1]) <= 9:
-                            arvutip.laud[9 - (posy + item[1])][posx + item[0]] = 2
-                            j.penup()
-                            j.goto(-575 + (50 * (posx + item[0])), -225 + (50 * (posy + item[1])))
-                            j.pencolor("#A9A9A9")
-                            j.pendown()
-                            j.left(45)
-                            j.forward(10)
-                            j.back(20)
-                            j.forward(10)
-                            j.right(90)
-                            j.forward(10)
-                            j.back(20)
-                            j.forward(10)
-                            j.left(45)
+                                j.penup()
 
                 else:
                     # kui ei ole laeva ehk mööda
@@ -755,14 +815,16 @@ def atk_easy():
                     j.goto(-575 + (50 * posx), -225 + (50 * posy))
                     j.pendown()
                     j.dot(15)
+                    j.penup()
 
-                    arvutip.laud[9 - posy][posx] = 4
-
-    print("valiklaud (kontroll hetkel) - mängija laud mängijale")
-    pp.pprint(kontroll)
-    print("arvutip - mängija laud arvutile")
-    pp.pprint(arvutip.laud)
-
+                    arvutip.laud[posy][posx] = 3
+    
+        print("valiklaud (kontroll hetkel) - mängija laud mängijale")
+        pp.pprint(kontroll)
+        print("arvutip - mängija laud arvutile")
+        pp.pprint(arvutip.laud)
+        return None
+        
     return None
 
 
@@ -1682,6 +1744,7 @@ def game_loop():
     global voit
     global laud
     global uusmang
+    global leitud
 
     #sisselogimisaken
     login = Tk()
@@ -1897,6 +1960,7 @@ def game_loop():
         kontroll.reverse()
 
         # valib raskustaseme vastavalt mängija algsele soovile
+        leitud = []
         if (raskustase == 1):
             veryeasy()
         elif (raskustase == 2):
