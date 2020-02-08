@@ -119,6 +119,7 @@ def polekas():
     lookas = Tk()
     lookas.title("Loo kasutaja")
     lookas.geometry('300x210')
+    lookas.resizable(False, False)
     kas = Label(lookas, text="Kasutajanimi:")
     kas.place(x=75, y=10)
     kasutaja1 = Entry(lookas)
@@ -163,6 +164,7 @@ def reeg():
     sis = open("Reeglid.txt", "r")
     reeglid.insert(INSERT, sis.read())
     sis.close()
+    reeglid.configure(state='disabled')
 
 
 def mang():
@@ -925,6 +927,8 @@ def extreme():
 
 
 def atk_extreme():
+    atk_hard()
+    """
     global arvutip
     nb = NaiveBayesGuesser(arvutip)
     n = 0
@@ -932,6 +936,7 @@ def atk_extreme():
         print("guess:", nb.get_guess(arvutip.laud))
         n += 1
     return None
+    """
 
 
 #
@@ -1756,11 +1761,12 @@ def atk_pomm():
     global arvutitabamus
     global kogulaevad
     global voit
+    global laud
 
     if not kaik:
         return None
 
-    if time() - lastpress < 0.05: #0.6
+    if time() - lastpress < 0.5: #0.6
         return None
     j.goto(102 + 50 * asukoht[0], -247 + 50 * asukoht[1])
 
@@ -1866,7 +1872,18 @@ def atk_pomm():
     kaik = False
 
     # arvuti mõtleb
-    sleep(5 * random() ** 10)
+
+    motl = Toplevel(laud)
+    motl.title("")
+    motl.geometry('200x40')
+    motl.protocol("WM_DELETE_WINDOW", noclose)
+    motl.resizable(False, False)
+    motl1 = Label(motl, text="ARVUTI MÕTLEB")
+    motl1.place(x=50, y=10)
+
+    laud.update()
+    sleep(0.2 + 5 * random() ** 10)
+    motl.destroy()
     ajalug.configure(state='normal')
 
     # arvuti ründab
@@ -1942,6 +1959,7 @@ def voiduteade():
     teade = Toplevel(laud)
     teade.title("Uuesti?")
     teade.geometry('250x100')
+    teade.resizable(False, False)
     teademsg = Label(teade, text="Kas soovid uuesti mängida?")
     teademsg.place(x=50, y=5)
     nupp1 = ttk.Button(teade, text="Jah", command=uusjah)
@@ -1964,6 +1982,10 @@ def uusei():
     global laud
     uusmang = False
     laud.destroy()
+
+
+def noclose():
+    pass
 
 
 # 4. ----------------------------------
@@ -1994,6 +2016,7 @@ def game_loop():
     login = Tk()
     login.title("Login")
     login.geometry('300x210')
+    login.resizable(False, False)
 
     loginmsg = Label(login, text="Mängimiseks pead sisse logima.")
     loginmsg.place(x=65, y=5)
@@ -2021,6 +2044,7 @@ def game_loop():
     tervitus = Tk()
     tervitus.title("Tere tulemast, " + kasu)
     tervitus.geometry('300x110')
+    tervitus.resizable(False, False)
     msg = Label(tervitus, text="Mida soovid teha?")
     msg.place(x=100, y=5)
     nupp1 = ttk.Button(tervitus, text="Lugeda reegleid", command=reeg)
@@ -2062,6 +2086,7 @@ def game_loop():
         rask = Tk()
         rask.title("Raskustase")
         rask.geometry('300x230')
+        rask.resizable(False, False)
         msg = Label(rask, text="Vali endale sobiv raskustase.")
         msg.place(x=73, y=5)
         nupp1 = ttk.Button(rask, text="Väga lihtne", command=lambda: rt(1))
@@ -2088,6 +2113,8 @@ def game_loop():
         laevavalik.title("Laevade paigutamine")
         canvas1 = Canvas(master=laevavalik, width=700, height=700)
         canvas1.pack()
+        laevavalik.minsize(width=650, height=650)
+        laevavalik.maxsize(width=700, height=700)
 
         canvas = TurtleScreen(canvas1)
         canvas.tracer(0, 0)
@@ -2136,6 +2163,8 @@ def game_loop():
         control = Toplevel(laevavalik)
         control.title("Paigutaja kontrollimine")
         control.geometry('300x240')
+        control.protocol("WM_DELETE_WINDOW", noclose)
+        control.resizable(False,False)
 
         global lastpress
         lastpress = 0
@@ -2231,6 +2260,8 @@ def game_loop():
         laud.title("Laevade ründamine")
         canvas1 = Canvas(master=laud, width=1400, height=700)
         canvas1.pack()
+        laud.minsize(width=1350, height=650)
+        laud.maxsize(width=1400, height=700)
 
         canvas = TurtleScreen(canvas1)
         canvas.tracer(0, 0)
@@ -2309,6 +2340,8 @@ def game_loop():
         control = Toplevel(laud)
         control.title("Pommitaja kontrollimine")
         control.geometry('300x210')
+        control.protocol("WM_DELETE_WINDOW", noclose)
+        control.resizable(False,False)
         nupp1 = ttk.Button(control, text="N", command=atk_ules)
         nupp1.place(x=75, y=20, width=150)
         nupp2 = ttk.Button(control, text="W", command=atk_vasakule)
@@ -2326,11 +2359,13 @@ def game_loop():
 
         ajal = Toplevel(laud)
         ajal.title("Pommitamisajalugu")
+        ajal.protocol("WM_DELETE_WINDOW", noclose)
+        ajal.resizable(False, False)
         ajalmsg1 = Label(ajal, text="Sinu käigud")
         ajalmsg1.place(x=89, y=5)
         ajalmsg2 = Label(ajal, text="Arvuti käigud")
         ajalmsg2.place(x=257, y=5)
-        ajalug = tkst.ScrolledText(master=ajal, wrap=WORD, width=60, height=20)
+        ajalug = tkst.ScrolledText(master=ajal, wrap=WORD, width=60, height=11)
         ajalug.pack(padx=10, pady=(25,10), fill=BOTH, expand=True)
         #ajalug.insert(INSERT, " " * 10 + "Sinu käigud" + " " * 10 + "Arvuti käigud" + "\n")
         ajalug.configure(state='disabled')
