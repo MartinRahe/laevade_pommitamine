@@ -288,7 +288,6 @@ def atk_veryeasy():
     j.penup()
     j.goto(102 + (50 * asukoht[0]), -247 + (50 * asukoht[1]))
     # mangijal vaja ka märkida
-    ajalug.insert(END, "\n")
 
     return None
 
@@ -773,7 +772,6 @@ def atk_easy():
                             arvutip.laud[posy][posx] = 3
                         tabatud = True
                         tabamus = True
-                        ajalug.insert(END, "\n")
                         break
 
                 if not moves:
@@ -888,7 +886,6 @@ def atk_easy():
                     j.penup()
 
                     arvutip.laud[posy][posx] = 3
-                ajalug.insert(END, "\n")
 
         print("valiklaud (kontroll hetkel) - mängija laud mängijale")
         pp.pprint(kontroll)
@@ -1677,10 +1674,10 @@ def atk_mark():
         return None
 
     global lastpress
-    """
+
     if time() - lastpress < 0.05: #0.6
         return None
-    """
+
     j.goto(102 + 50 * asukoht[0], -247 + 50 * asukoht[1])
     lastpress = time()
 
@@ -1716,10 +1713,12 @@ def atk_unmark():
         return None
 
     global lastpress
-    """
+
+    #print(time()-lastpress)
+
     if time() - lastpress < 0.05: #0.6
         return None
-    """
+
     j.goto(102 + 50 * asukoht[0], -247 + 50 * asukoht[1])
     lastpress = time()
 
@@ -1770,13 +1769,16 @@ def atk_pomm():
     # kui on laev
     posx = asukoht[0]
     posy = asukoht[1]
+    ajalug.configure(state='normal')
     ajalug.insert(END, str(kaigunumber) + "." + " " * (9 - len(str(kaigunumber))) + numtolet[posx] + " " + str(posy))
     print(mangijap.laud[posy][posx])
     if mangijap.laud[posy][posx] == 2:
         print("Mart Helme")
+        lastpress -= 0.069
         atk_unmark()
 
     if arvutil.laud[posy][posx] == 1 and mangijap.laud[posy][posx] == 0:
+        j.penup()
         j.goto(125 + 50 * posx, -225 + 50 * posy)
         j.pencolor("#0000FF")
         j.pendown()
@@ -1846,6 +1848,8 @@ def atk_pomm():
         ajalug.insert(END, "  " + choice(puudalla))
 
     ajalug.insert(END, "\n")
+    ajalug.yview(END)
+    ajalug.configure(state='disabled')
 
     '''  
     print("arvutil - arvuti laud arvutile")
@@ -1863,6 +1867,7 @@ def atk_pomm():
 
     # arvuti mõtleb
     sleep(5 * random() ** 10)
+    ajalug.configure(state='normal')
 
     # arvuti ründab
     if raskustase == 1:
@@ -1878,14 +1883,53 @@ def atk_pomm():
     elif raskustase == 6:
         atk_impossible()
 
+    ajalug.insert(END, "\n")
+    ajalug.yview(END)
+    ajalug.configure(state='disabled')
+
     # kontroll kas arvuti on võitnud
     if arvutitabamus == kogulaevad:
         voit = -1
+        avalda()
         voiduteade()
     else:
         kaik = True
     print(mangijatabamus, arvutitabamus, kogulaevad)
 
+def avalda():
+    for y in range(10):
+        for x in range(10):
+            if mangijap.laud[y][x] in [0,2] and arvutil.laud[y][x] == 1:
+                mangijap.laud[y][x] = 5
+                j.penup()
+                j.goto(125 + 50 * x, -225 + 50 * y)
+                j.pencolor("#0000FF")
+                j.pendown()
+                j.dot(23)
+
+                moves = [[0, 1], [1, 0], [-1, 0], [0, -1]]
+                for move in moves:
+                    if x + move[1] >= 0 and y + move[0] >= 0 and x + move[1] <= 9 and y + move[0] <= 9:
+                        if mangijap.laud[y + move[0]][x + move[1]] in [4,5]:
+                            j.pendown()
+                            j.pensize(23)
+                            j.goto(125 + 50 * (x + move[1]), -225 + 50 * (y + move[0]))
+                            j.pensize(5)
+                            if mangijap.laud[y + move[0]][x + move[1]] == 4:
+                                j.pencolor("#FF0000")
+                                j.left(45)
+                                j.forward(20)
+                                j.back(40)
+                                j.forward(20)
+                                j.right(90)
+                                j.forward(20)
+                                j.back(40)
+                                j.forward(20)
+                                j.left(45)
+                            j.penup()
+                            j.goto(125 + 50 * x, -225 + 50 * y)
+                            j.pencolor("#0000FF")
+                            j.pendown()
 
 def voiduteade():
     global laud
@@ -1909,6 +1953,7 @@ def voiduteade():
 def uusjah():
     global uusmang
     global laud
+    global sobib
     uusmang = True
     sobib = True
     laud.destroy()
@@ -2281,9 +2326,14 @@ def game_loop():
 
         ajal = Toplevel(laud)
         ajal.title("Pommitamisajalugu")
+        ajalmsg1 = Label(ajal, text="Sinu käigud")
+        ajalmsg1.place(x=89, y=5)
+        ajalmsg2 = Label(ajal, text="Arvuti käigud")
+        ajalmsg2.place(x=257, y=5)
         ajalug = tkst.ScrolledText(master=ajal, wrap=WORD, width=60, height=20)
-        ajalug.pack(padx=10, pady=10, fill=BOTH, expand=True)
-        ajalug.insert(INSERT, " " * 10 + "Sinu käigud" + " " * 10 + "Arvuti käigud" + "\n")
+        ajalug.pack(padx=10, pady=(25,10), fill=BOTH, expand=True)
+        #ajalug.insert(INSERT, " " * 10 + "Sinu käigud" + " " * 10 + "Arvuti käigud" + "\n")
+        ajalug.configure(state='disabled')
         kaigunumber = 0
         print(valiklaud.laevad, arvutil.laevad)
         mangijatabamus = 0
