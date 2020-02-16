@@ -9,9 +9,12 @@ from turtle import TurtleScreen
 import base64
 import os
 from time import time, sleep
-import pprint
+#import p#print
 from random import randint, choice, random
 from copy import deepcopy
+
+# hiljem välja commentida
+import pprint
 
 # from classifier import NaiveBayesGuesser
 
@@ -47,33 +50,19 @@ class Laud:
         self.laud = [[0 for i in range(self.pikkus)] for s in range(self.laius)]
 
 
-# PrettyPrinteri deklaleerimine
+# Pretty#printeri deklaleerimine
 pp = pprint.PrettyPrinter(indent=4)
 
 numtolet = {0: "A", 1: "B", 2: "C", 3: "D", 4: "E", 5: "F", 6: "G", 7: "H", 8: "I", 9: "J"}
-puudalla = ["No mida", "Kes siis nii teeb?", "Tundub tuttav?", "Suht kasutu"]
-voidusonumid = ["Palju õnne, sa võitsid."]
-kaotussonumid = ["Sel korral pidid arvutile alla vanduma."]
-
-"""
-# vajalikud lauad, peaks veel üle vaatama!
-# valikute tegemise laud ehk
-# mängija laud talle endale kuvatuna
-valiklaud = Laud()
-pp.pprint(valiklaud.laud)
-# kolmas laud (l nagu laev)
-# arvuti laevade informatsiooni
-# ehk arvuti laud "talle kuvatuna"
-arvutil = Laud()
-# neljas laud (p nagu pomm)
-# arvuti pommitamise informatsiooni (arvuti ründab mängijat)
-arvutip = Laud()
-# viies laud (p nagu pomm)
-# mängija pommitamise informatsioon ehk
-# arvuti laud mängijale kuvatuna
-mangijap = Laud()
-"""
-
+puudalla = ["No mida", "Kes siis nii teeb?", "Tundub tuttav?", "Suht kasutu", "Anna siis juba lihtsalt alla",
+            "Tahtsidki nii teha?", "Kordamine on tarkuse ema", "Sa saad laual liikuda ka muide",
+            "Nii küll võita ei saa"]
+voidusonumid = ["Palju õnne, sa võitsid!", "Tubli töö, sa võitsid!", "Sa võitsid! Kavalalt tulistatud!",
+                "Võit! Äkki peaksid raskemat taset proovima?", "Väga tubli! Sa võitsid!",
+                "Hästi mängitud! Võit!"]
+kaotussonumid = ["Sel korral pidid arvutile alla vanduma.", "Kahjuks kaotasid, aga ära anna alla!",
+                 "Kahjuks kaotasid, proovi midagi muud!", "Lootus sureb viimasena! Proovi uuesti!",
+                 "Igakord ei saagi võita!"]
 
 def encode(string):
     return str(base64.b64encode(bytes(string, "utf-8")), "utf-8")
@@ -93,7 +82,7 @@ def logi():
 
     kasu = str(kasutaja.get())
     paro = str(parool.get())
-    # print(kasu,paro)
+    # #print(kasu,paro)
     if "" in [kasu, paro]:
         mb.showerror("ERROR", "Kasutajanimi või parool on ebasobiv.")
     else:
@@ -139,7 +128,7 @@ def lokas():
 
     kasu = str(kasutaja1.get())
     paro = str(parool1.get())
-    # print(kasu, paro)
+    # #print(kasu, paro)
     if "" in [kasu, paro]:
         mb.showerror("ERROR", "Kasutajanimi või parool on ebasobiv.")
     else:
@@ -147,8 +136,10 @@ def lokas():
             mb.showerror("ERROR", "Kasutajanimi on juba kasutuses, palun vali mõni teine.")
         else:
             playerfile = open(dir + "/" + kasu + ".txt", "w", encoding="utf-8")
-            print(encode(paro) + "\n")
-            playerfile.write(encode(paro) + "\n")
+            #print(encode(paro) + "\n")
+            playerfile.write(encode(paro) + "\n"*2)
+            for i in range(10):
+                playerfile.write(encode(10*"0 ") + "\n")
             playerfile.close()
             mb.showinfo("INFO", "Registreerimine õnnestus.")
             lookas.destroy()
@@ -161,7 +152,7 @@ def reeg():
     reeglid = tkst.ScrolledText(master=r, wrap=WORD, width=50, height=20)
     reeglid.pack(padx=10, pady=10, fill=BOTH, expand=True)
     # Adding some text, to see if scroll is working as we expect it
-    sis = open("Reeglid.txt", "r")
+    sis = open("Reeglid.txt", "r", encoding="utf-8")
     reeglid.insert(INSERT, sis.read())
     sis.close()
     reeglid.configure(state='disabled')
@@ -184,44 +175,32 @@ def rt(raskus):
     # sulgeb raskustaseme valimisakna
     rask.destroy()
 
-
-# tagastab True, kui tabatud laev on põhjas
-"""
-def pihtas_pohjas(maatriks, alg_pos, tabamus):
-    moves = [[0, 1], [1, 0], [-1, 0], [0, -1]]
-
-    for move in moves:
-
-        # kontrollitmaks visuaalselt, mida programm kontrollib
-        if (9 - (alg_pos[1] + move[1]) >= 0 and 9 - (alg_pos[0] + move[0]) >= 0) and (
-                9 - (alg_pos[1] + move[1]) <= 9 and 9 - (alg_pos[0] + move[0]) <= 9):
-            j.penup()
-            j.goto(-575 + (50 * (alg_pos[1] + move[1])), -225 + (50 * (alg_pos[0] + move[0])))
-            j.pendown()
-            j.pencolor("#d3f3c8")
-            j.dot(25)
-
-            if maatriks[9 - (alg_pos[0] + move[0])][alg_pos[1] + move[1]] == tabamus:
-                return False
-
-    return True
-"""
-
-# uurib, kas 'item' on nested listis
-def find(mylist, item):
-    for sub_list in mylist:
-        if item in sub_list:
-            return True
-    return False
-
-
-# leiab mingi 'item'i indeksi nested listis
 def find_index(mylist, item):
     for sub_list in mylist:
         if item in sub_list:
             return (mylist.index(sub_list), sub_list.index(item))
     return None
 
+def choose_random_max(myList):
+    ans = 0
+    for row in range(10):
+        for column in range(10):
+            try:
+                if myList[row][column] > ans:
+                    ans = myList[row][column]
+            except:
+                pass
+    posib = []
+    for row in range(10):
+        for column in range(10):
+            try:
+                if myList[row][column] == ans:
+                    posib.append([row, column])
+            except:
+                pass
+
+    final = choice(posib)
+    return final
 
 # 2. ------------------------------
 # Siin asuvad kõik erinevate raskustasemete jaoks kasutatavad algoritmid
@@ -267,7 +246,7 @@ def atk_veryeasy():
                         ajalug.insert(END, "  Pihtas")
                     else:
                         ajalug.insert(END, "  Pihtas põhjas")
-                    print(valiklaud.laevad)
+                    #print(valiklaud.laevad)
                     break
             arvutip.laud[posy][posx] = 4
             arvutitabamus += 1
@@ -312,16 +291,16 @@ def easy():
             voim = [[a, b, 1] for a in range(0, 11 - pikkus) for b in range(0, 10)]
         else:
             voim = [[a, b, c] for a in range(0, 11 - pikkus) for b in range(0, 10) for c in range(0, 2)]
-        # print(voim)
+        # #print(voim)
         eelmised[n] = deepcopy(arvutil.laud)
-        print(eelmised)
+        #print(eelmised)
         valmis = False
         while voim:
             arvutil.laud = deepcopy(eelmised[n])
             valik = choice(voim)
             voim.remove(valik)
-            # print(voim)
-            # print(len(voim))
+            # #print(voim)
+            # #print(len(voim))
             alg1 = valik[0]
             alg2 = valik[1]
             suund = valik[2]
@@ -329,10 +308,10 @@ def easy():
                 x, y = alg1, alg2
             else:
                 x, y = alg2, alg1
-            # print(n)
-            # print(x,y,suund,pikkus)
+            # #print(n)
+            # #print(x,y,suund,pikkus)
             # for i in arvutil.laud:
-            # print(i)
+            # #print(i)
             saab = True
             if suund == 0:
                 for i in range(pikkus):
@@ -404,7 +383,7 @@ def easy():
                             if arvutil.laud[y + pikkus][x + 1] != 1:
                                 arvutil.laud[y + pikkus][x + 1] = "x"
 
-                # print("e",eelmised)
+                # #print("e",eelmised)
                 if laevapikkused:
                     paiguta(n + 1)
                 else:
@@ -414,20 +393,20 @@ def easy():
         else:
             laevapikkused.append(pikkus)
             arvutil.laud = deepcopy(eelmised[n])
-            # print(911, len(laevapikkused))
-        # print(saab)
+            # #print(911, len(laevapikkused))
+        # #print(saab)
 
     # laevapikkused = [1,5,3,5,5,5,5,5,5]
     # vaja teha muutujaks laevade arvu kohta
     laevapikkused = valiklaud.laevapikkused
     laevapikkused.sort()
-    print("laevapikkused:", laevapikkused)
+    #print("laevapikkused:", laevapikkused)
 
     f = dir1 + "/laud"
     for i in laevapikkused:
         f += "-" + str(i)
     f += ".txt"
-    print("mingi fail?: ", f)
+    #print("mingi fail?: ", f)
 
     lauafail = open(f, "a")
     lauafail.close()
@@ -436,12 +415,12 @@ def easy():
     for i in range(len(arvutilauad)):
         arvutilauad[i] = arvutilauad[i].split("\n")
     del arvutilauad[-1]
-    print("a", arvutilauad)
+    #print("a", arvutilauad)
     lauafail.close()
     lauafail = open(f, "a")
 
     eelmised = {i: [] for i in range(len(laevapikkused))}
-    print(eelmised)
+    #print(eelmised)
 
     arvutil.laud = [[0 for i in range(10)] for s in range(10)]
 
@@ -450,8 +429,9 @@ def easy():
     paiguta(0)
 
     for i in arvutil.laud:
-        print(i)
-    print()
+        #print(i)
+        pass
+    #print()
     for i in arvutil.laud:
         for s in range(10):
             if i[s] == "x":
@@ -462,19 +442,20 @@ def easy():
         for s in range(10):
             i[s] = str(i[s])
     for i in arvutil.laud1:
-        print(i)
+        #print(i)
+        pass
 
     if kaua:
         arvutil.laudh = choice(arvutilauad)
         for i in range(10):
             arvutil.laudh[i] = decode(arvutil.laudh[i])
-        print(arvutil.laudh)
+        #print(arvutil.laudh)
         arvutil.laudh11 = [[s for s in i] for i in arvutil.laudh]
-        print(arvutil.laudh11)
+        #print(arvutil.laudh11)
         arvutil.laudv11 = []
         for i in range(10):
             arvutil.laudv11.append([s[i] for s in arvutil.laudh11])
-        print(arvutil.laudv11)
+        #print(arvutil.laudv11)
         s = randint(0, 7)
         if s == 0:
             arvutil.laud = arvutil.laudh11
@@ -523,20 +504,21 @@ def easy():
             arvutil.laudv12[i] = encode(arvutil.laudv12[i])
             arvutil.laudv21[i] = encode(arvutil.laudv21[i])
             arvutil.laudv22[i] = encode(arvutil.laudv22[i])
-        print(arvutil.laudh11, "e")
+        #print(arvutil.laudh11, "e")
         if arvutil.laudh11 not in arvutilauad and arvutil.laudh21 not in arvutilauad and arvutil.laudv11 not in arvutilauad and arvutil.laudv21 not in arvutilauad and \
                 arvutil.laudh12 not in arvutilauad and arvutil.laudh22 not in arvutilauad and arvutil.laudv12 not in arvutilauad and arvutil.laudv22 not in arvutilauad:
             for i in range(10):
                 lauafail.write(arvutil.laudh11[i] + "\n")
             lauafail.write("\n")
-    print()
+    #print()
     lauafail.close()
     for i in arvutil.laud:
         for s in range(10):
             i[s] = int(i[s])
     for i in arvutil.laud:
-        print(i)
-    print()
+        #print(i)
+        pass
+    #print()
     kaidud = []
     for y in range(10):
         for x in range(10):
@@ -561,10 +543,10 @@ def easy():
                         break
                 arvutil.laevad.append(laev)
 
-    print(arvutil.laevad)
+    #print(arvutil.laevad)
     arvutil.laevapikkused = [len(i) for i in arvutil.laevad]
-    print(arvutil.laevapikkused, len(arvutil.laevapikkused))
-    print(time() - algaeg)
+    #print(arvutil.laevapikkused, len(arvutil.laevapikkused))
+    #print(time() - algaeg)
 
     '''
     x = randint(0, 10) 
@@ -580,10 +562,10 @@ def easy():
 
 
 def atk_easy():
-    global kontroll
     global ajalug
     global arvutitabamus
     global leitud
+    global hml_save
     # muidu proovi leida üles kogu laev
     # ei tulista samasse kohta
     # märgistab võimatud ruudud
@@ -597,20 +579,13 @@ def atk_easy():
     # 4 - tabamus
     # 5 - uuritud tabamus
 
-    # kui laual on mõni tabamus
-    # tabamused tuleb märkida "loetuteks", et arvuti ei jookseks kokku
-
-    # kui tabad laeva näiteks keskelt, siis on täiesti pekkis
-    # pihtas_pohjas jamab natukene
-    # no way, et 9. valmis jõuab
-
     if (leitud):
-        print("leitud ",leitud)
+        #print("leitud ",leitud)
 
         tabamus = False
         while not tabamus:
             alg = choice(leitud)
-            print(alg)
+            #print(alg)
             posx = alg[0]
             posy = alg[1]
             tabatud = False
@@ -627,6 +602,7 @@ def atk_easy():
                         if valiklaud.laud[posy][posx] == 1:
                             leitud.append([posx,posy])
                             arvutitabamus += 1
+                            hml_save[posx][posy] += 1
                             arvutip.laud[posy][posx] = 4
                             for laev in valiklaud.laevad:
                                 if [posx, posy] in laev:
@@ -764,6 +740,7 @@ def atk_easy():
                                         j.forward(10)
                                         j.left(45)
                                         j.penup()
+
                         else:
                             j.penup()
                             j.pencolor("#A9A9A9")
@@ -813,7 +790,6 @@ def atk_easy():
 
                                 for move in moves:
 
-                                    # kontrollitmaks visuaalselt, mida programm kontrollib
                                     if posx + move[1] >= 0 and posy + move[0] >= 0 and posx + move[1] <= 9 and posy + move[0] <= 9:
                                         if arvutip.laud[posy + move[0]][posx + move[1]] == 0:
                                             j.penup()
@@ -832,10 +808,14 @@ def atk_easy():
                                             j.penup()
 
                                             arvutip.laud[posy + move[0]][posx + move[1]] = 2
-                            print(valiklaud.laevad)
+
+                            #print(valiklaud.laevad)
                             break
+
                     arvutip.laud[posy][posx] = 4
+                    hml_save[posx][posy] += 1
                     arvutitabamus += 1
+
 
                     j.penup()
                     j.goto(-575 + (50 * posx), -225 + (50 * posy))
@@ -858,7 +838,7 @@ def atk_easy():
                     pos = [[1, 1], [-1, -1], [-1, 1], [1, -1]]
 
                     for item in pos:
-                        print(posx + item[0],posy + item[1])
+                        #print(posx + item[0],posy + item[1])
                         if posx + item[0] >= 0 and posy + item[1] >= 0 and posx + item[0] <= 9 and posy + item[1] <= 9:
                             if arvutip.laud[posy + item[1]][posx + item[0]] == 0:
                                 arvutip.laud[posy + item[1]][posx + item[0]] = 2
@@ -889,9 +869,8 @@ def atk_easy():
 
                     arvutip.laud[posy][posx] = 3
 
-        print("valiklaud (kontroll hetkel) - mängija laud mängijale")
-        pp.pprint(kontroll)
-        print("arvutip - mängija laud arvutile")
+
+        #print("arvutip")
         pp.pprint(arvutip.laud)
         return None
 
@@ -900,10 +879,139 @@ def atk_easy():
 
 # Normal:
 def normal():
-    return None
+    easy()
 
-
+# diagonaalid + atk_easy
 def atk_normal():
+    global leitud
+    global ajalug
+    global hml_save
+    global diagonaalid
+    global arvutitabamus
+
+    #pp.p#print(diagonaalid)
+
+    if (leitud):
+        atk_easy()
+    else:
+
+        tulistas = False
+        while not tulistas:
+
+            lask = choice(choice(diagonaalid))
+            #print("lask:", lask)
+
+            posy = lask[0]
+            posx = lask[1]
+            for pos in diagonaalid:
+                if [posy, posx] in pos:
+                    pos.remove([posy, posx])
+
+            for pos in diagonaalid:
+                if pos == []:
+                    diagonaalid.remove(pos)
+
+            if arvutip.laud[posy][posx] == 0:
+
+                tulistas = True
+                ajalug.insert(END, " " * 31 + numtolet[posx] + " " + str(posy))
+
+                if valiklaud.laud[posy][posx] == 1:
+
+                    # kui on laev ehk tabamus
+                    leitud.append([posx, posy])
+                    for laev in valiklaud.laevad:
+                        if [posx, posy] in laev:
+                            laev.remove([posx, posy])
+                            arvutip.laud[posy][posx] = 4
+                            if laev:
+                                ajalug.insert(END, "  Pihtas")
+                            else:
+                                ajalug.insert(END, "  Pihtas põhjas")
+                                leitud = []
+                                moves = [[0, 1], [1, 0], [-1, 0], [0, -1]]
+
+                                for move in moves:
+
+                                    if posx + move[1] >= 0 and posy + move[0] >= 0 and posx + move[1] <= 9 and posy + \
+                                            move[0] <= 9:
+                                        if arvutip.laud[posy + move[0]][posx + move[1]] == 0:
+                                            j.penup()
+                                            j.goto(-575 + (50 * (posx + move[1])), -225 + (50 * (posy + move[0])))
+                                            j.pencolor("#A9A9A9")
+                                            j.pendown()
+                                            j.left(45)
+                                            j.forward(10)
+                                            j.back(20)
+                                            j.forward(10)
+                                            j.right(90)
+                                            j.forward(10)
+                                            j.back(20)
+                                            j.forward(10)
+                                            j.left(45)
+                                            j.penup()
+
+                                            arvutip.laud[posy + move[0]][posx + move[1]] = 2
+
+                            #print(valiklaud.laevad)
+                            break
+
+                    arvutip.laud[posy][posx] = 4
+                    hml_save[posx][posy] += 1
+                    arvutitabamus += 1
+
+                    j.penup()
+                    j.goto(-575 + (50 * posx), -225 + (50 * posy))
+                    j.pendown()
+                    j.pencolor("#FF0000")
+                    j.left(45)
+                    j.forward(20)
+                    j.back(40)
+                    j.forward(20)
+                    j.right(90)
+                    j.forward(20)
+                    j.back(40)
+                    j.forward(20)
+                    j.left(45)
+                    j.penup()
+
+                    # kui pihta, siis tuleb teha ka märgistused
+
+                    # märgistused, kui laseb pihta
+                    pos = [[1, 1], [-1, -1], [-1, 1], [1, -1]]
+
+                    for item in pos:
+                        #print(posx + item[0], posy + item[1])
+                        if posx + item[0] >= 0 and posy + item[1] >= 0 and posx + item[0] <= 9 and posy + item[1] <= 9:
+                            if arvutip.laud[posy + item[1]][posx + item[0]] == 0:
+                                arvutip.laud[posy + item[1]][posx + item[0]] = 2
+
+                                j.penup()
+                                j.goto(-575 + (50 * (posx + item[0])), -225 + (50 * (posy + item[1])))
+                                j.pencolor("#A9A9A9")
+                                j.pendown()
+                                j.left(45)
+                                j.forward(10)
+                                j.back(20)
+                                j.forward(10)
+                                j.right(90)
+                                j.forward(10)
+                                j.back(20)
+                                j.forward(10)
+                                j.left(45)
+                                j.penup()
+
+                else:
+                    # kui ei ole laeva ehk mööda
+                    j.penup()
+                    j.pencolor("#A9A9A9")
+                    j.goto(-575 + (50 * posx), -225 + (50 * posy))
+                    j.pendown()
+                    j.dot(15)
+                    j.penup()
+
+                    arvutip.laud[posy][posx] = 3
+
     return None
 
 
@@ -911,58 +1019,448 @@ def atk_normal():
 #
 # Hard:
 def hard():
-    return None
+    easy()
 
-
+# HeatMap
 def atk_hard():
+    global hml
+    global leitud
+    global ajalug
+    global hml_save
+    global arvutitabamus
+
+    # hml - kasutab tulistamiseks
+    # hml_save - salvestab heatmapi
+
+    #print("hml:")
+    #pp.p#print(hml)
+    #print("hmlmax:", max(max(hml)))
+
+    if (leitud):
+        atk_easy()
+    elif max(max(hml)) != 0:
+
+        while max(max(hml)) != 0:
+
+            tuli = find_index(hml, choose_random_max(hml))
+            posy = tuli[1]
+            posx = tuli[0]
+            #pp.p#print(hml)
+            #print(tuli)
+            #print(max(max(hml)))
+
+            if arvutip.laud[posy][posx] == 0:
+
+                lask = True
+                ajalug.insert(END, " " * 31 + numtolet[posx] + " " + str(posy))
+
+                if valiklaud.laud[posy][posx] == 1:
+
+                    # kui on laev ehk tabamus
+                    leitud.append([posx, posy])
+                    for laev in valiklaud.laevad:
+                        if [posx, posy] in laev:
+
+                            laev.remove([posx, posy])
+                            arvutip.laud[posy][posx] = 4
+
+                            if laev:
+                                ajalug.insert(END, "  Pihtas")
+                            else:
+                                ajalug.insert(END, "  Pihtas põhjas")
+                                leitud = []
+                                moves = [[0, 1], [1, 0], [-1, 0], [0, -1]]
+
+                                for move in moves:
+
+                                    if posx + move[1] >= 0 and posy + move[0] >= 0 and posx + move[1] <= 9 and posy + \
+                                            move[0] <= 9:
+                                        if arvutip.laud[posy + move[0]][posx + move[1]] == 0:
+                                            j.penup()
+                                            j.goto(-575 + (50 * (posx + move[1])), -225 + (50 * (posy + move[0])))
+                                            j.pencolor("#A9A9A9")
+                                            j.pendown()
+                                            j.left(45)
+                                            j.forward(10)
+                                            j.back(20)
+                                            j.forward(10)
+                                            j.right(90)
+                                            j.forward(10)
+                                            j.back(20)
+                                            j.forward(10)
+                                            j.left(45)
+                                            j.penup()
+
+                                            arvutip.laud[posy + move[0]][posx + move[1]] = 2
+                            #print(valiklaud.laevad)
+                            break
+                    arvutip.laud[posy][posx] = 4
+                    hml_save[posx][posy] += 1
+                    hml[posy][posx] = 0
+                    arvutitabamus += 1
+
+                    j.penup()
+                    j.goto(-575 + (50 * posx), -225 + (50 * posy))
+                    j.pendown()
+                    j.pencolor("#FF0000")
+                    j.left(45)
+                    j.forward(20)
+                    j.back(40)
+                    j.forward(20)
+                    j.right(90)
+                    j.forward(20)
+                    j.back(40)
+                    j.forward(20)
+                    j.left(45)
+                    j.penup()
+
+                    # kui pihta, siis tuleb teha ka märgistused
+
+                    # märgistused, kui laseb pihta
+                    pos = [[1, 1], [-1, -1], [-1, 1], [1, -1]]
+
+                    for item in pos:
+                        #print(posx + item[0], posy + item[1])
+                        if posx + item[0] >= 0 and posy + item[1] >= 0 and posx + item[0] <= 9 and posy + item[1] <= 9:
+                            if arvutip.laud[posy + item[1]][posx + item[0]] == 0:
+                                arvutip.laud[posy + item[1]][posx + item[0]] = 2
+                                hml[posy + item[1]][posx + item[0]] = 0
+
+                                j.penup()
+                                j.goto(-575 + (50 * (posx + item[0])), -225 + (50 * (posy + item[1])))
+                                j.pencolor("#A9A9A9")
+                                j.pendown()
+                                j.left(45)
+                                j.forward(10)
+                                j.back(20)
+                                j.forward(10)
+                                j.right(90)
+                                j.forward(10)
+                                j.back(20)
+                                j.forward(10)
+                                j.left(45)
+                                j.penup()
+
+
+                    return None
+
+                else:
+                    # kui ei ole laeva ehk mööda
+                    j.penup()
+                    j.pencolor("#A9A9A9")
+                    j.goto(-575 + (50 * posx), -225 + (50 * posy))
+                    j.pendown()
+                    j.dot(15)
+                    j.penup()
+
+                    arvutip.laud[posy][posx] = 3
+                    hml[posy][posx] = 0
+                    return None
+
+            # kui visuaal ütleb, et ei ole laeva
+            else:
+                #print("reached")
+                hml[posx][posy] = 0
+        else:
+            atk_easy()
+            return None
+    else:
+        atk_easy()
+        return None
+
     return None
 
-
-#
-#
-# NaiveBayesGuesser algoritm
-# Extreme:
+# hetkel sama mis eelmine raskustase.
 def extreme():
-    return None
+    easy()
 
-
+# Probability Density function
 def atk_extreme():
-    atk_hard()
-    """
-    global arvutip
-    nb = NaiveBayesGuesser(arvutip)
-    n = 0
-    while n != 4:
-        print("guess:", nb.get_guess(arvutip.laud))
-        n += 1
-    return None
-    """
+    global leitud
+    global ajalug
+    global arvutitabamus
 
+    # arvutip
+    # 0 - teadmata
+    # 2 - märgendus
+    # 3 - mööda
+    # 4 - tabamus
 
-#
-#
+    hunt_map = [[0 for i in range(10)] for j in range(10)]
+
+    # arv - tn
+    # "X" - teada, et ei ole laeva
+    for x in range(10):
+        for y in range(10):
+            if arvutip.laud[x][y] in [2, 3, 4]:
+                hunt_map[x][y] = "x"
+
+    valiklaud.laevapikkused = []
+    for item in valiklaud.laevad:
+        valiklaud.laevapikkused.append(len(item))
+
+    pikim = max(valiklaud.laevapikkused)
+
+    if (leitud):
+        # destroy mode
+        atk_easy()
+    else:
+        # hunt mode
+        # horisontaal
+        for pikkus in valiklaud.laevapikkused:
+            for row in range(10):
+                for cell in range(0, 11-pikkus):
+                    cShip = []
+                    for ship in range(cell, cell+pikkus):
+                        if int(arvutip.laud[row][ship]) not in [2, 3, 4]:
+                            cShip.append([row, ship])
+                        else:
+                            cShip = []
+                            break
+                    for cord in cShip:
+                        x, y = cord[0], cord[1]
+                        hunt_map[x][y] += 1
+
+        # vertikaal
+        for pikkus in valiklaud.laevapikkused:
+            for column in range(10):
+                for cell in range(0, 11-pikkus):
+                    cShip = []
+                    for ship in range(cell, cell+pikkus):
+                        if int(arvutip.laud[ship][column]) not in [2, 3, 4]:
+                            cShip.append([ship, column])
+                        else:
+                            cShip = []
+                            break
+                    for cord in cShip:
+                        x, y = cord[0], cord[1]
+                        hunt_map[x][y] += 1
+
+        tuli = choose_random_max(hunt_map)
+        posy = tuli[0]
+        posx = tuli[1]
+
+        ajalug.insert(END, " " * 31 + numtolet[posx] + " " + str(posy))
+        if valiklaud.laud[posy][posx] == 1:
+
+            # kui on laev ehk tabamus
+            leitud.append([posx, posy])
+            for laev in valiklaud.laevad:
+                if [posx, posy] in laev:
+                    laev.remove([posx, posy])
+                    arvutip.laud[posy][posx] = 4
+                    if laev:
+                        ajalug.insert(END, "  Pihtas")
+                    else:
+                        ajalug.insert(END, "  Pihtas põhjas")
+                        leitud = []
+                        moves = [[0, 1], [1, 0], [-1, 0], [0, -1]]
+
+                        for move in moves:
+
+                            if posx + move[1] >= 0 and posy + move[0] >= 0 and posx + move[1] <= 9 and posy + move[
+                                0] <= 9:
+                                if arvutip.laud[posy + move[0]][posx + move[1]] == 0:
+                                    j.penup()
+                                    j.goto(-575 + (50 * (posx + move[1])), -225 + (50 * (posy + move[0])))
+                                    j.pencolor("#A9A9A9")
+                                    j.pendown()
+                                    j.left(45)
+                                    j.forward(10)
+                                    j.back(20)
+                                    j.forward(10)
+                                    j.right(90)
+                                    j.forward(10)
+                                    j.back(20)
+                                    j.forward(10)
+                                    j.left(45)
+                                    j.penup()
+
+                                    arvutip.laud[posy + move[0]][posx + move[1]] = 2
+
+                    #print(valiklaud.laevad)
+                    break
+
+            arvutip.laud[posy][posx] = 4
+            hml_save[posx][posy] += 1
+            arvutitabamus += 1
+
+            j.penup()
+            j.goto(-575 + (50 * posx), -225 + (50 * posy))
+            j.pendown()
+            j.pencolor("#FF0000")
+            j.left(45)
+            j.forward(20)
+            j.back(40)
+            j.forward(20)
+            j.right(90)
+            j.forward(20)
+            j.back(40)
+            j.forward(20)
+            j.left(45)
+            j.penup()
+
+            # kui pihta, siis tuleb teha ka märgistused
+
+            # märgistused, kui laseb pihta
+            pos = [[1, 1], [-1, -1], [-1, 1], [1, -1]]
+
+            for item in pos:
+                #print(posx + item[0], posy + item[1])
+                if posx + item[0] >= 0 and posy + item[1] >= 0 and posx + item[0] <= 9 and posy + item[1] <= 9:
+                    if arvutip.laud[posy + item[1]][posx + item[0]] == 0:
+                        arvutip.laud[posy + item[1]][posx + item[0]] = 2
+
+                        j.penup()
+                        j.goto(-575 + (50 * (posx + item[0])), -225 + (50 * (posy + item[1])))
+                        j.pencolor("#A9A9A9")
+                        j.pendown()
+                        j.left(45)
+                        j.forward(10)
+                        j.back(20)
+                        j.forward(10)
+                        j.right(90)
+                        j.forward(10)
+                        j.back(20)
+                        j.forward(10)
+                        j.left(45)
+                        j.penup()
+
+        else:
+            # kui ei ole laeva
+            j.pencolor("#A9A9A9")
+            j.goto(-575 + (50 * posx), -225 + (50 * posy))
+            j.pendown()
+            j.dot(15)
+            j.penup()
+            arvutip.laud[posy][posx] = 3
+
+        pp.pprint(hunt_map)
+
 # nii-öelda "võimatu" raskustase, mis leiab üles mängija
 # paigutatud laevad
 # Impossible:
 def impossible():
-    return None
+    easy()
 
 
 def atk_impossible():
-    mangijal.laud[3][4] = '@'
-    koord = []  # Leiab mängija laevad
-    for i in range(mangijal.pikkus):
-        if '@' in mangijal.laud[i]:
-            indices = [j for j, x in enumerate(mangijal.laud[i]) if x == '@']
-            for it in indices:
-                koord.append([i, it])
+    global hml
+    global leitud
+    global ajalug
+    global hml_save
+    global arvutitabamus
+    global mangijatabamus
 
-    def impak():
-        if koord != []:
-            print(koord)
-            arvutip.laud.laud[koord[0][0]][koord[0][1]] = 'x'
-            koord.pop(0)
-        return None
+    if (leitud):
+        atk_easy()
+    elif arvutitabamus - mangijatabamus >= 5:
+        atk_extreme()
+    else:
+        lastavlaev = []
+        while not lastavlaev:
+            lastavlaev = choice(valiklaud.laevad)
+        lask = choice(lastavlaev)
+        posx = lask[0]
+        posy = lask[1]
+        ajalug.insert(END, " " * 31 + numtolet[posx] + " " + str(posy))
+
+        if valiklaud.laud[posy][posx] == 1:
+
+            # kui on laev ehk tabamus
+            leitud.append([posx, posy])
+            for laev in valiklaud.laevad:
+                if [posx, posy] in laev:
+                    laev.remove([posx, posy])
+                    arvutip.laud[posy][posx] = 4
+                    if laev:
+                        ajalug.insert(END, "  Pihtas")
+                    else:
+                        ajalug.insert(END, "  Pihtas põhjas")
+                        leitud = []
+                        moves = [[0, 1], [1, 0], [-1, 0], [0, -1]]
+
+                        for move in moves:
+
+                            if posx + move[1] >= 0 and posy + move[0] >= 0 and posx + move[1] <= 9 and posy + move[
+                                0] <= 9:
+                                if arvutip.laud[posy + move[0]][posx + move[1]] == 0:
+                                    j.penup()
+                                    j.goto(-575 + (50 * (posx + move[1])), -225 + (50 * (posy + move[0])))
+                                    j.pencolor("#A9A9A9")
+                                    j.pendown()
+                                    j.left(45)
+                                    j.forward(10)
+                                    j.back(20)
+                                    j.forward(10)
+                                    j.right(90)
+                                    j.forward(10)
+                                    j.back(20)
+                                    j.forward(10)
+                                    j.left(45)
+                                    j.penup()
+
+                                    arvutip.laud[posy + move[0]][posx + move[1]] = 2
+
+                    #print(valiklaud.laevad)
+                    break
+
+            arvutip.laud[posy][posx] = 4
+            hml_save[posx][posy] += 1
+            arvutitabamus += 1
+
+            j.penup()
+            j.goto(-575 + (50 * posx), -225 + (50 * posy))
+            j.pendown()
+            j.pencolor("#FF0000")
+            j.left(45)
+            j.forward(20)
+            j.back(40)
+            j.forward(20)
+            j.right(90)
+            j.forward(20)
+            j.back(40)
+            j.forward(20)
+            j.left(45)
+            j.penup()
+
+            # kui pihta, siis tuleb teha ka märgistused
+
+            # märgistused, kui laseb pihta
+            pos = [[1, 1], [-1, -1], [-1, 1], [1, -1]]
+
+            for item in pos:
+                #print(posx + item[0], posy + item[1])
+                if posx + item[0] >= 0 and posy + item[1] >= 0 and posx + item[0] <= 9 and posy + item[1] <= 9:
+                    if arvutip.laud[posy + item[1]][posx + item[0]] == 0:
+                        arvutip.laud[posy + item[1]][posx + item[0]] = 2
+
+                        j.penup()
+                        j.goto(-575 + (50 * (posx + item[0])), -225 + (50 * (posy + item[1])))
+                        j.pencolor("#A9A9A9")
+                        j.pendown()
+                        j.left(45)
+                        j.forward(10)
+                        j.back(20)
+                        j.forward(10)
+                        j.right(90)
+                        j.forward(10)
+                        j.back(20)
+                        j.forward(10)
+                        j.left(45)
+                        j.penup()
+
+        else:
+            # kui ei ole laeva ehk mööda
+            j.penup()
+            j.pencolor("#A9A9A9")
+            j.goto(-575 + (50 * posx), -225 + (50 * posy))
+            j.pendown()
+            j.dot(15)
+            j.penup()
+
+            arvutip.laud[posy][posx] = 3
+
 
 
 # 3. -----------------------------------------------
@@ -980,7 +1478,7 @@ def valik_ules():
         return None
     lastpress = time()
     j.pendown()
-    print("valik asukoht:", asukoht)
+    #print("valik asukoht:", asukoht)
     if asukoht[1] < 9:
         asukoht[1] += 1
     else:
@@ -1015,7 +1513,7 @@ def valik_alla():
         return None
     lastpress = time()
     j.pendown()
-    print("valik asukoht:", asukoht)
+    #print("valik asukoht:", asukoht)
     if asukoht[1] > 0:
         asukoht[1] -= 1
     else:
@@ -1050,7 +1548,7 @@ def valik_vasakule():
         return None
     lastpress = time()
     j.pendown()
-    print("valik asukoht:", asukoht)
+    #print("valik asukoht:", asukoht)
     if asukoht[0] > 0:
         asukoht[0] -= 1
     else:
@@ -1084,7 +1582,7 @@ def valik_paremale():
         return None
     lastpress = time()
     j.pendown()
-    print("valik asukoht:", asukoht)
+    #print("valik asukoht:", asukoht)
     if asukoht[0] < 9:
         asukoht[0] += 1
     else:
@@ -1142,7 +1640,7 @@ def valik_paiguta():
             suund = "v"
         elif (y == 0 and valiklaud.laud[y + 1][x] == 1) or (y == 9 and valiklaud.laud[y - 1][x] == 1):
             suund = "v"
-        print(suund)
+        #print(suund)
         if suund == "h":
             ots1 = x
             ots2 = x
@@ -1150,7 +1648,7 @@ def valik_paiguta():
                 ots1 -= 1
             while ots2 < 9 and valiklaud.laud[y][ots2 + 1] == 1:
                 ots2 += 1
-            print(ots1, ots2)
+            #print(ots1, ots2)
             a = 2
             juures1 = 0
             juures2 = 0
@@ -1175,7 +1673,7 @@ def valik_paiguta():
                     break
 
             l = ots2 - ots1 + 1
-            print(l, juures1, juures2)
+            #print(l, juures1, juures2)
             if l + juures1 >= 5:
                 if ots1 > 0:
                     if valiklaud.laud[y][ots1 - 1] == 0:
@@ -1193,7 +1691,7 @@ def valik_paiguta():
                 ots1 -= 1
             while ots2 < 9 and valiklaud.laud[ots2 + 1][x] == 1:
                 ots2 += 1
-            print(ots1, ots2)
+            #print(ots1, ots2)
             a = 2
             juures1 = 0
             juures2 = 0
@@ -1218,7 +1716,7 @@ def valik_paiguta():
                     break
 
             l = ots2 - ots1 + 1
-            print(l, juures1, juures2)
+            #print(l, juures1, juures2)
             if l + juures1 >= 5:
                 if ots1 > 0:
                     if valiklaud.laud[ots1 - 1][x] == 0:
@@ -1253,7 +1751,7 @@ def valik_paiguta():
                 except IndexError:
                     break
 
-            print(juures1, juures2)
+            #print(juures1, juures2)
             if juures1 >= 4:
                 if x > 0:
                     if valiklaud.laud[y][x - 1] == 0:
@@ -1288,7 +1786,7 @@ def valik_paiguta():
                 except IndexError:
                     break
 
-            print(juures1, juures2)
+            #print(juures1, juures2)
             if juures1 >= 4:
                 if y > 0:
                     if valiklaud.laud[y - 1][x] == 0:
@@ -1352,7 +1850,7 @@ def valik_eemalda():
         ots4 = y
         while ots4 < 9 and valiklaud.laud[ots4 + 1][x] == 1:
             ots4 += 1
-        print(ots1, ots2, ots3, ots4)
+        #print(ots1, ots2, ots3, ots4)
 
         if x - ots1 <= 4 and ots1 > 0:
             if valiklaud.laud[y][ots1 - 1] == "x":
@@ -1533,7 +2031,7 @@ def atk_ules():
         j.forward(8)
         j.right(90)
     j.penup()
-    print("rünnak asukoht:", asukoht)
+    #print("rünnak asukoht:", asukoht)
 
 
 # 3.2. ------------------------------------------------
@@ -1581,7 +2079,7 @@ def atk_alla():
         j.forward(8)
         j.right(90)
     j.penup()
-    print("rünnak asukoht:", asukoht)
+    #print("rünnak asukoht:", asukoht)
 
 
 # ründamisaknas kasutatava nupu "W" (ehk west) funktsioon
@@ -1623,7 +2121,7 @@ def atk_vasakule():
         j.forward(8)
         j.right(90)
     j.penup()
-    print("rünnak asukoht:", asukoht)
+    #print("rünnak asukoht:", asukoht)
 
 
 # ründamisaknas kasutatava nupu "E" (ehk east) funktsioon
@@ -1665,7 +2163,7 @@ def atk_paremale():
         j.forward(8)
         j.right(90)
     j.penup()
-    print("rünnak asukoht:", asukoht)
+    #print("rünnak asukoht:", asukoht)
 
 
 # ründamisaknas kasutatava nupu "Märgista" funktsioon
@@ -1705,7 +2203,7 @@ def atk_mark():
 
         mangijap.laud[asukoht[1]][asukoht[0]] = 2
 
-    print("rünnak asukoht:", asukoht)
+    #print("rünnak asukoht:", asukoht)
 
 
 # ründamisaknas kasutatava nupu "Eemalda märgistus" funktsioon
@@ -1719,7 +2217,7 @@ def atk_unmark():
 
     global lastpress
 
-    #print(time()-lastpress)
+    ##print(time()-lastpress)
 
     if time() - lastpress < 0.05: #0.6
         return None
@@ -1746,10 +2244,10 @@ def atk_unmark():
 
         mangijap.laud[asukoht[1]][asukoht[0]] = 0
 
-    print("rünnak asukoht:", asukoht)
+    #print("rünnak asukoht:", asukoht)
 
 
-# ründamisaknas kasutatava nupu "allahu akbar" funktsioon
+# ründamisaknas kasutatava nupu funktsioon
 def atk_pomm():
     global lastpress
     global asukoht
@@ -1777,9 +2275,9 @@ def atk_pomm():
     posy = asukoht[1]
     ajalug.configure(state='normal')
     ajalug.insert(END, str(kaigunumber) + "." + " " * (9 - len(str(kaigunumber))) + numtolet[posx] + " " + str(posy))
-    print(mangijap.laud[posy][posx])
+    #print(mangijap.laud[posy][posx])
     if mangijap.laud[posy][posx] == 2:
-        print("Mart Helme")
+        #print("Mart Helme")
         lastpress -= 0.069
         atk_unmark()
 
@@ -1834,7 +2332,7 @@ def atk_pomm():
                     ajalug.insert(END, "  Pihtas")
                 else:
                     ajalug.insert(END, "  Pihtas põhjas")
-                print(arvutil.laevad)
+                #print(arvutil.laevad)
                 break
         mangijatabamus += 1
 
@@ -1853,23 +2351,27 @@ def atk_pomm():
     elif mangijap.laud[posy][posx] in [3, 4]:
         ajalug.insert(END, "  " + choice(puudalla))
 
+    #print(kogulaevad, "eee")
     ajalug.insert(END, "\n")
     ajalug.yview(END)
     ajalug.configure(state='disabled')
 
     '''  
-    print("arvutil - arvuti laud arvutile")
-    pp.pprint(arvutil.laud)
-    print("mangijap - arvuti laud mängijale")
-    pp.pprint(mangijap.laud)
-    print("rünnak asukoht:", asukoht)
+    #print("arvutil - arvuti laud arvutile")
+    #pp.p#print(arvutil.laud)
+    #print("mangijap - arvuti laud mängijale")
+    #pp.p#print(mangijap.laud)
+    #print("rünnak asukoht:", asukoht)
     '''
+    #print(kogulaevad, "eee")
     # kontroll kas mängija on võitnud
     if mangijatabamus == kogulaevad:
         voit = 1
         voiduteade()
         return None
     kaik = False
+
+    #print("Arvuti käik")
 
     # arvuti mõtleb
 
@@ -1911,7 +2413,7 @@ def atk_pomm():
         voiduteade()
     else:
         kaik = True
-    print(mangijatabamus, arvutitabamus, kogulaevad)
+    #print(mangijatabamus, arvutitabamus, kogulaevad)
 
 def avalda():
     for y in range(10):
@@ -1950,6 +2452,11 @@ def avalda():
 
 def voiduteade():
     global laud
+    global hml_save
+    global ajalug
+    global playerfile
+
+    #print(ajalug)
     if voit == 1:
         mb.showinfo("VÕIT", choice(voidusonumid))
     elif voit == -1:
@@ -1967,6 +2474,23 @@ def voiduteade():
     nupp2 = ttk.Button(teade, text="Ei", command=uusei)
     nupp2.place(x=90, y=60, width=70)
 
+    #open("heatmapl.txt", "w").close()
+    #overwrite = open("heatmapl.txt", "w")
+
+    #print("salvestan heatmapi")
+    #pp.p#print(hml_save)
+    for row in hml_save:
+        asi = ""
+        for item in row:
+            asi += str(item) + " "
+        playerfile.write(encode(asi) + "\n")
+    #overwrite.close()
+    playerfile.close()
+    playerfile = open(dir + "/" + kasu + ".txt", "w", encoding="utf-8")
+    fail = open("temp.txt","r", encoding="utf-8")
+    playerfile.write(fail.read())
+    playerfile.close()
+    fail.close()
 
 def uusjah():
     global uusmang
@@ -2011,6 +2535,9 @@ def game_loop():
     global laud
     global uusmang
     global leitud
+    global playerfile
+
+    # uncomment
 
     # sisselogimisaken
     login = Tk()
@@ -2036,9 +2563,9 @@ def game_loop():
     sobib = False
     login.mainloop()
     if not sobib:
-        sys.exit()
+         sys.exit()
 
-    playerfile = open(dir + "/" + kasu + ".txt", "r", encoding="utf-8")
+    #playerfile = open(dir + "/" + kasu + ".txt", "r", encoding="utf-8")
 
     # tervituse aken
     tervitus = Tk()
@@ -2057,14 +2584,14 @@ def game_loop():
     if not sobib:
         sys.exit()
 
+
     uusmang = True
     while uusmang:
-        # vajalikud lauad, peaks veel üle vaatama!
         # valikute tegemise laud ehk
         # mängija laud talle endale kuvatuna
         global valiklaud
         valiklaud = Laud()
-        pp.pprint(valiklaud.laud)
+        #pp.p#print(valiklaud.laud)
 
         # kolmas laud (l nagu laev)
         # arvuti laevade informatsiooni
@@ -2106,7 +2633,7 @@ def game_loop():
         rask.mainloop()
         if not sobib:
             sys.exit()
-        # print(raskustase)
+        # #print(raskustase)
 
         # laevavaliku aken
         laevavalik = Tk()
@@ -2193,17 +2720,17 @@ def game_loop():
 
         # mangijal on mängija laud arvutile kuvatuna
         mangijal = valiklaud
-        pp.pprint(valiklaud.laud)
-        print()
+        #pp.p#print(valiklaud.laud)
+        #print()
 
         for i in mangijal.laud:
             for s in range(10):
                 if i[s] == "x":
                     i[s] = 0
 
-        pp.pprint(mangijal.laud)
-        print()
-        pp.pprint(valiklaud.laud)
+        #pp.p#print(mangijal.laud)
+        #print()
+        #pp.p#print(valiklaud.laud)
 
         for y in range(10):
             for x in range(10):
@@ -2227,21 +2754,72 @@ def game_loop():
                         else:
                             break
                     valiklaud.laevad.append(laev)
-        print(valiklaud.laevad)
+        #print(valiklaud.laevad)
         valiklaud.laevapikkused = [len(i) for i in valiklaud.laevad]
-        print(valiklaud.laevapikkused)
+        #print(valiklaud.laevapikkused)
         kogulaevad = sum(valiklaud.laevapikkused)
-        print(kogulaevad)
+        #print(kogulaevad)
 
-        # lõplik mängulaud
-        print("EKRE")
+        #print("EKRE")
 
-        # lõplik mängija laevadevalik
-        global kontroll
-        kontroll = list(deepcopy(valiklaud.laud))
-        kontroll.reverse()
+        #kasu = "."
+        global hml
+        hml = []
+        playerfile = open(dir + "/" + kasu + ".txt", "r", encoding="utf-8")
+        a = decode(playerfile.readline())
+        playerfile.readline()
+        #print(a,"oooooo")
+        hmlfile = playerfile.readlines()
+        playerfile.close()
 
-        # valib raskustaseme vastavalt mängija algsele soovile
+        playerfile = open("temp.txt", "w", encoding="utf-8")
+        #print(encode(a) + "\n")
+        playerfile.write(encode(a) + "\n"*2)
+        
+        #pp.p#print(hmlfile)
+        for i in hmlfile:
+            i = decode(i)
+            #print(i)
+            c = []
+            for j in i.strip().split(" "):
+                c.append(int(j.strip()))
+            hml.append(c)
+
+        global hml_save
+        hml_save = deepcopy(hml)
+        #print("hml_save")
+        #pp.p#print(hml_save)
+
+        global diag
+        diag = min(valiklaud.laevapikkused)
+
+        dnl = [
+            [[0, 0]],
+            [[1, 0], [0, 1]],
+            [[2, 0], [1, 1], [0, 2]],
+            [[3, 0], [2, 1], [1, 2], [0, 3]],
+            [[4, 0], [3, 1], [2, 2], [1, 3], [0, 4]],
+            [[5, 0], [4, 1], [3, 2], [2, 3], [1, 4], [0, 5]],
+            [[6, 0], [5, 1], [4, 2], [3, 3], [2, 4], [1, 5], [0, 6]],
+            [[7, 0], [6, 1], [5, 2], [4, 3], [3, 4], [2, 5], [1, 6], [0, 7]],
+            [[8, 0], [7, 1], [6, 2], [5, 3], [4, 4], [3, 5], [2, 6], [1, 7], [0, 8]],
+            [[9, 0], [8, 1], [7, 2], [6, 3], [5, 4], [4, 5], [3, 6], [2, 7], [1, 8 ], [0, 9]],
+            [[9, 1], [8, 2], [7, 3], [6, 4], [5, 5], [4, 6], [3, 7], [2, 8], [1, 9]],
+            [[9, 2], [8, 3], [7, 4], [6, 5], [5, 6], [4, 7], [3, 8], [2, 8]],
+            [[9, 3], [8, 4], [7, 5], [6, 6], [5, 7], [4, 8], [3, 9]],
+            [[9, 4], [8, 5], [7, 6], [6, 7], [5, 8], [4, 9]],
+            [[9, 5], [8, 6], [7, 7], [6, 8], [5, 9]],
+            [[9, 6], [8, 7], [7, 8], [6, 9]],
+            [[9, 7], [8, 8], [7, 9]],
+            [[9, 8], [8, 9]],
+            [[9, 9]]
+        ]
+
+        global diagonaalid
+        diagonaalid = []
+        for d in range(0, len(dnl), diag):
+            diagonaalid.append(dnl[d])
+
         leitud = []
         if (raskustase == 1):
             veryeasy()
@@ -2354,7 +2932,7 @@ def game_loop():
         nupp5.place(x=75, y=120, width=150)
         nupp6 = ttk.Button(control, text="Eemalda märgistus", command=atk_unmark)
         nupp6.place(x=75, y=145, width=150)
-        nupp7 = ttk.Button(control, text="Allahu akbar!", command=atk_pomm)
+        nupp7 = ttk.Button(control, text="Tuld!", command=atk_pomm)
         nupp7.place(x=75, y=170, width=150)
 
         ajal = Toplevel(laud)
@@ -2370,7 +2948,7 @@ def game_loop():
         #ajalug.insert(INSERT, " " * 10 + "Sinu käigud" + " " * 10 + "Arvuti käigud" + "\n")
         ajalug.configure(state='disabled')
         kaigunumber = 0
-        print(valiklaud.laevad, arvutil.laevad)
+        #print(valiklaud.laevad, arvutil.laevad)
         mangijatabamus = 0
         arvutitabamus = 0
         voit = 0
@@ -2383,10 +2961,10 @@ def game_loop():
 
 
 game_loop()
-print()
-print(encode("Hello World"))
+#print()
+#print(encode("Hello World"))
 a = base64.b64encode(bytes("Hello World", "utf-8"))
-print(a)
+#print(a)
 b = base64.b64decode(a)
-print(b)
-print(str(b, "utf-8"))
+#print(b)
+#print(str(b, "utf-8"))
