@@ -9,12 +9,12 @@ heatmapt = [] #Mängija tulistamise heatmap
 tulnim = [] #Nimekiri kohtadest, mida tulistada
 
 class Laud:
-  
+
   def __init__(self, pikkus, laius):
     self.pikkus = pikkus
     self.laius = laius
     self.laud = [[0 for i in range(self.pikkus)] for j in range(self.laius)] #<3<3 tundus nagu parem variant
-  
+
 # 0,0 0,1 0,2 ...
 # 1,0 1,1 1,2 ...
 # ...
@@ -49,21 +49,6 @@ heatmapl = Laud(10, 10)
 heatmapt = Laud(10, 10)
 
 heatmapl.laud[8][4] = 1
-'''
-def hardal():
-    global tulnim
-    hml = heatmapl.laud
-    if tulnim == []:
-        for i in range(len(hml)):
-            y = hml[i].index(max(hml[i]))
-            tulnim.append([i, y, hml[i][y]])
-            hml[i].pop(y)
-        tulnim = sorted(tulnim, key=lambda tul: tul[2], reverse = True)
-    if mangijal.laud[tulnim[0][0]][tulnim[0][1]] == 1:
-        arvutip.laud[tulnim[0][0]][tulnim[0][1]] = 'x'
-    else:
-        arvutip.laud[tulnim[0][0]][tulnim[0][1]] = 'O'
-    tulnim.pop(0)'''
 
 def hardal():
     global tulnim
@@ -72,11 +57,18 @@ def hardal():
         hml += heatmapl.laud[i]
     print(hml)
     for i in range(len(hml)):
-        tulnim.append([floor(hml.index(max(hml))/10), (hml.index(max(hml)))%10])
-        hml[hml.index(max(hml))] = -420
+        z = hml.index(max(hml))
+        tulnim.append([floor(z/10), z%10, heatmapl.laud[floor(z/10)][(z)%10]])
+        hml[z] = -420
+    tulnim = sorted(tulnim, key=lambda tul: tul[2], reverse = True)
     print(tulnim)
     print(hml)
+    if mangijal.laud[tulnim[0][0]][tulnim[0][1]] == 1:
+        arvutip.laud[tulnim[0][0]][tulnim[0][1]] = 'x'
+    else:
+        arvutip.laud[tulnim[0][0]][tulnim[0][1]] = 'O'
     '''if tulnim = []:
         for i in range(len(hml)):
             hml.index(max(hml))'''
 hardal()
+arvutip.print_laud()
