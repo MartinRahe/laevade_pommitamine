@@ -1038,9 +1038,9 @@ def atk_hard():
 
     if (leitud):
         atk_easy()
-    elif max(max(hml)) != 0:
+    elif choose_random_max(hml) != 0:
 
-        while max(max(hml)) != 0:
+        while choose_random_max(hml) != 0:
 
             tuli = find_index(hml, choose_random_max(hml))
             posy = tuli[1]
