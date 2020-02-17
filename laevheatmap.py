@@ -48,8 +48,6 @@ mangijap = Laud(10,10) #Siin hoitakse mängija pommitamise informatsiooni
 heatmapl = Laud(10, 10)
 heatmapt = Laud(10, 10)
 
-heatmapl.laud[8][4] = 1
-
 def hardal():
     global tulnim
     hml = [] #koopia heatmapist, mida võib editida
@@ -67,8 +65,3 @@ def hardal():
         arvutip.laud[tulnim[0][0]][tulnim[0][1]] = 'x'
     else:
         arvutip.laud[tulnim[0][0]][tulnim[0][1]] = 'O'
-    '''if tulnim = []:
-        for i in range(len(hml)):
-            hml.index(max(hml))'''
-hardal()
-arvutip.print_laud()
