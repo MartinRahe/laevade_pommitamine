@@ -1,0 +1,36 @@
+  Siin failis on toodud kõikide erinevate raskustasemete selgitused.
+  Sulgudes on kirjutatud mõtted või plaanitud algoritmid, millega ei jõudnud antud ajaga
+  lõpuni.
+
+  1. Väga lihtne
+    1.1. Suvaline paigutus
+    1.2. Suvaline ründamine
+      1.2.1. võib lasta samasse kohta
+      1.2.2. ei otsi kogu laeva üles
+  2. Lihtne
+    1.1. Suvaline paigutus
+    1.2. Otsib kogu laeva üles, kui on ühe tüki leidnud
+      1.2.1. Arvuti märgistab võimatud ruudud peale lasku
+      1.2.2. Arvuti otsib edasi, kui saab pihta, aga ei ole põhjas
+      1.2.3. Arvuti laseb suvaliselt, kuni saab pihta
+      1.2.4. Arvuti ei lase samasse kohta mitu korda
+  3. Keskmine
+    3.1. Suvaline paigutus
+    3.2. Tulistab diagonaalidest orienteerudes
+      3.2.1. Valib diagonaalid vastavalt kõige lühemale laevale
+      3.2.2. Arvuti ei lase samasse kohta
+      3.2.3. Otsib kogu laeva üles, kui on ühe tüki leidnud
+  4. Raske (selgituseks: vajab palju infot kindla mängija kohta, et oleks efektiivne)
+    4.1. Suvaline paigutus (Heatmapi järgi paigutamine)
+    4.2. Heatmapi järgi tulistamine
+      4.2.1. Arvuti jätab meelde mängija eelnevad käigud, ning edaspidisel mängimisel tulistab
+             kohtadesse, kuhu mängija on kõige rohkem oma laevu paigutanud
+  5. Ekstreemne (selgituseks: väga efektiivne pikemate laevade ja kindlate paigutusviiside korral)
+    5.1. Suvaline paigutus (Heatmapi järgi paigutamine)
+    5.2. Tõenäosuste algoritm
+        5.2.1. Arvutab iga ruudu jaoks tõenäosuse, et seal asub mingi laeva jupp ning tulistab kõige
+               suurema tõenäosusega ruutu
+        5.2.2. Otsib laeva edasi peale esimest pihtalasku
+  6. Võimatu
+    6.1. Suvaline paigutus (Heatmapi järgi paigutamine)
+    6.2. Jääb mängijale avastamiseks

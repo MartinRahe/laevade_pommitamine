@@ -1,9 +1,23 @@
-1. M�ngitakse 10x10 ruudustikul, k�igud toimuvad ruutude sees.
-2. M�ngu alguses peab m�ngija lauale paigutama oma laevad. Laevu peab olema v�hemalt �ks ja laeva maksimaalne pikkus on 5 ruutu.
-3. �kski kaks laeva ei tohi omada �hist ruutu, serva ega tippu.
-4. Kui m�ngija on oma laevad paigutanud, paigutab arvuti oma lauale samasugused laevad.
-5. M�ngija ja arvuti ei n�e �ksteise laevu.
-6. M�ngu ajal on m�ngija laual tema laevad ning seal kuvatakse arvuti laskude tulemused. Arvuti laual on m�ngijale n�htamatud arvuti laevad, seal teeb m�ngija oma laske.
-7. Pommitamine k�ib kordam��da, alustab m�ngija.
-8. Iga k�igu j�rel saavad nii m�ngija kui arvuti selle kohta tagasisidet.
-9. V�idab see, kes h�vitab enne k�ik vastase laevad.
+Tere tulemast!
+
+Järgnevalt on välja toodud üldised reeglid ja selgitused/nõuanded mängu kohta.
+Loodan, et leiate mängust midagi uut ja huvitavat. Aitäh, et mängite meie mängu.
+
+1. Mängitakse 10x10 ruudustikul, käigud toimuvad ruutude sees.
+2. Mängu alguses peab mängija lauale paigutama oma laevad. Laevu peab olema vähemalt üks ja laeva maksimaalne pikkus on 5 ruutu.
+3. Ükski kaks laeva ei tohi omada ühist ruutu, serva ega tippu.
+4. Kui mängija on oma laevad paigutanud, paigutab arvuti oma lauale samasugused laevad.
+5. Mängija ja arvuti ei näe üksteise laevu.
+6. Mängu ajal on mängija laual tema laevad ning seal kuvatakse arvuti laskude tulemused. Arvuti laual on mängijale nähtamatud arvuti laevad, seal teeb mängija oma laske.
+7. Pommitamine käib kordamööda, alustab mängija.
+8. Iga käigu järel saavad nii mängija kui arvuti selle kohta tagasisidet.
+9. Võidab see, kes hävitab enne kõik vastase laevad.
+10. Mängu lõpus avalikustatakse mängijale arvuti laevad.
+11. Mängijal on võimalus tulistada samasse kohta mitu korda, aga omal vastutusel! Arvuti kipub kaotama
+austust sellise mängija vastu.
+12. Mängija saab märkida ristidega ruudud, kus kindlasti ei ole arvuti laeva, kasutades nuppu "Märgista".
+13. Igal mängijal PEAB mängimiseks olema oma kasutaja. Kasutaja on vajalik mängija vastase strateegia planeerimiseks.
+Kasutaja parool on krüpteeritud, ning kättesaamatu teistele kasutajatele.
+14. Sõnum "arvuti mõtleb" on tahtlikult sisseehitatud aeg, et vastane tunduks rohkem inimene.
+15. Ajalooaken võib väga kasulik olla, kui seda natukene uurida.
+16. Äkki võimatu polegi nii võimatu, kui tundub? Aga äkki ikkagi on?
